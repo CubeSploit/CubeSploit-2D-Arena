@@ -2,18 +2,39 @@
 
 [ext_resource path="res://ship_editor/ship_editor.gd" type="Script" id=1]
 [ext_resource path="res://ship_editor/grid.gd" type="Script" id=2]
-[ext_resource path="res://icon.png" type="Texture" id=3]
+[ext_resource path="res://ship_editor/grid.png" type="Texture" id=3]
 [ext_resource path="res://ui/tile_list.tscn" type="PackedScene" id=4]
 
 [node name="ship_editor" type="Node2D"]
 
 script/script = ExtResource( 1 )
 
+[node name="camera_2d" type="Camera2D" parent="."]
+
+transform/pos = Vector2( 500, 300 )
+anchor_mode = 1
+rotating = false
+current = true
+zoom = Vector2( 1, 1 )
+limit/left = -10000000
+limit/top = -10000000
+limit/right = 10000000
+limit/bottom = 10000000
+limit/smoothed = false
+drag_margin/h_enabled = false
+drag_margin/v_enabled = false
+smoothing/enable = false
+smoothing/speed = 5.0
+drag_margin/left = 0.2
+drag_margin/top = 0.2
+drag_margin/right = 0.2
+drag_margin/bottom = 0.2
+
 [node name="grid" type="Node2D" parent="."]
 
 script/script = ExtResource( 2 )
 
-[node name="ParallaxBackground" type="ParallaxBackground" parent="grid"]
+[node name="parallax_bg" type="ParallaxBackground" parent="grid"]
 
 layer = -1
 offset = Vector2( 0, 0 )
@@ -26,16 +47,24 @@ scroll/limit_begin = Vector2( 0, 0 )
 scroll/limit_end = Vector2( 0, 0 )
 scroll/ignore_camera_zoom = false
 
-[node name="ParallaxLayer" type="ParallaxLayer" parent="grid/ParallaxBackground"]
+[node name="parallax_layer" type="ParallaxLayer" parent="grid/parallax_bg"]
 
 motion/scale = Vector2( 1, 1 )
 motion/offset = Vector2( 0, 0 )
-motion/mirroring = Vector2( 0, 0 )
+motion/mirroring = Vector2( 1000, 600 )
 
-[node name="Sprite" type="Sprite" parent="grid/ParallaxBackground/ParallaxLayer"]
+[node name="texture_frame" type="TextureFrame" parent="grid/parallax_bg/parallax_layer"]
 
-transform/pos = Vector2( 559.114, 242.147 )
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 1000.0
+margin/bottom = 600.0
 texture = ExtResource( 3 )
+stretch_mode = 2
 
 [node name="tilemap" type="TileMap" parent="grid"]
 
@@ -55,8 +84,16 @@ collision/mask = 1
 occluder/light_mask = 1
 tile_data = IntArray(  )
 
-[node name="ui" type="Control" parent="."]
+[node name="canvas_layer" type="CanvasLayer" parent="."]
 
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+
+[node name="ui" type="Control" parent="canvas_layer"]
+
+visibility/visible = false
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -66,6 +103,6 @@ margin/top = 0.0
 margin/right = 40.0
 margin/bottom = 40.0
 
-[node name="tile_list" parent="ui" instance=ExtResource( 4 )]
+[node name="tile_list" parent="canvas_layer/ui" instance=ExtResource( 4 )]
 
 
