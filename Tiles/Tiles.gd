@@ -1,5 +1,6 @@
 extends Node
 
+var size = Vector2(20,20)
 var count = 3
 
 const Type = {
