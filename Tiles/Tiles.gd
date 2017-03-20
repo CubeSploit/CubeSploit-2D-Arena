@@ -3,6 +3,8 @@ extends Node
 var size = Vector2(20,20)
 var count = 3
 
+var connection_texture = preload("res://Tiles/connexion.png")
+
 const Type = {
 	'Core': 0,
 	'Hull': 1,

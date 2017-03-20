@@ -1,5 +1,7 @@
 extends Control
 
+signal tile_type_selected(tile_type)
+
 onready var v_box_container = get_node("scroll_container/v_box_container")
 
 func _ready():
@@ -24,6 +26,6 @@ func _ready():
 		
 	v_box_container.add_child( HSeparator.new() )
 
-
-func on_tile_click(  tile_id ):
-	print("Tile pressed ", tile_id)
+func on_tile_click(  tile_type ):
+#	print("Tile pressed ", tile_id)
+	emit_signal("tile_type_selected", tile_type)
