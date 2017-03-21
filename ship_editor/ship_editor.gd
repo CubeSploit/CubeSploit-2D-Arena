@@ -4,6 +4,7 @@ onready var camera = get_node('camera_2d')
 onready var grid_layer = get_node("grid/parallax_bg/parallax_layer")
 onready var grid_texture = get_node("grid/parallax_bg/parallax_layer/texture_frame")
 onready var cursor = get_node("cursor")
+var grid_texture_virtual_size = OS.get_window_size()
 
 onready var tilemap = get_node("tilemap")
 var selected_tile_type = 0
@@ -25,7 +26,7 @@ func _unhandled_input(ev):
 	
 	# middle click
 	if( ev.type == InputEvent.MOUSE_BUTTON && ev.button_index == BUTTON_MIDDLE ):
-		on_grid_middle_click( ev.pressed )
+		wheel_pressed = ev.pressed
 	
 	# mouse motion while holding middle click down
 	if( ev.type == InputEvent.MOUSE_MOTION && wheel_pressed ):
@@ -49,16 +50,9 @@ func _draw():
 		var key = keys[i]
 		var tile = tiles[key]
 		var pos = grid_pos_to_pos(key)
-		if( tile.connections[0] ):
-			draw_set_transform(Vector2(0,0), 0, Vector2(1,1))
-			draw_texture( Tiles.connection_texture, pos )
-#		if( tile.connections[1] ):
-#			draw_texture( Tiles.connection_texture, pos )
-#		if( tile.connections[2] ):
-#			draw_texture( Tiles.connection_texture, pos )
-#		if( tile.connections[3] ):
-#			draw_texture( Tiles.connection_texture, pos )
-
+		for d in global.direction_iterator:
+			if( tile.connections[0] ):
+				draw_texture( Tiles.connection_textures[d], pos )
 
 func on_grid_left_click( cursor_pos ):
 	var cursor_real_pos = cursor_pos_to_real_pos( cursor_pos )
@@ -69,9 +63,6 @@ func on_grid_left_click( cursor_pos ):
 		"connections": [true,true,true,true]
 	}
 	update()
-
-func on_grid_middle_click( pressed ):
-		wheel_pressed = pressed
 	
 func on_grid_middle_click_motion( cursor_relative_pos ):
 		camera.set_pos(camera.get_pos()-cursor_relative_pos*camera.get_zoom())
@@ -81,14 +72,19 @@ func on_grid_wheel( button_index ):
 		var added_size = Tiles.size * tiles_screen_dim
 		if( button_index == BUTTON_WHEEL_UP ):
 			added_size *= -1
-		var new_size = grid_texture.get_size()+added_size
+		var new_size = grid_texture_virtual_size+added_size
 		var new_zoom = new_size/OS.get_window_size()
-#		if( new_zoom.x < 1 || new_zoom.y < 1):
-#			return
 
+		if( new_zoom.x < 0.3 || new_zoom.y < 0.3):
+			return
+			
 		camera.set_zoom( new_zoom )
-		grid_texture.set_size(new_size)
 		grid_layer.set_motion_scale(new_zoom)
+		# texture size should be changed only on zoom superior to 1, else it is buggy
+		# dunno why...
+		if( new_zoom.x >= 1 || new_zoom.y >= 1 ):
+			grid_texture.set_size(new_size)
+		grid_texture_virtual_size = new_size
 
 func on_grid_mouse_motion( mouse_pos ):
 	var cursor_real_pos = cursor_pos_to_real_pos( mouse_pos )
