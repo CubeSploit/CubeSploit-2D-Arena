@@ -1,3 +1,30 @@
-Credit for all the icons goes to http://game-icons.net/
+All icons come from http://game-icons.net/
 
 No modification has been brought to the icons.
+
+anticlockwise-rotation.png 	by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/gui/anticlockwise-rotation.html
+arrow-cursor.png 			by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/gui/arrow-cursor.html
+clockwise-rotation.png 		by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/gui/clockwise-rotation.html
+contract.png 				by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/gui/contract.html
+expand.png 					by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/gui/expand.html
+load.png 					by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/gui/load.html
+position-marker.png 		by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/gui/position-marker.html
+save.png 					by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/gui/save.html
+entry-door.png 				by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/originals/entry-door.html
+exit-door.png 				by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/originals/exit-door.html
+trash-can.png 				by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/originals/trash-can.html
+stack.png 					by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/originals/stack.html
+transform.png 				by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/gui/transform.html
+info.png 					by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/originals/info.html
+large-paint-brush.png 		by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/originals/large-paint-brush.html
+paint-roller.png 			by Delapouite under CC BY 3.0 http://game-icons.net/delapouite/originals/paint-roller.html
+
+interdiction.png			by Lorc under CC BY 3.0 http://game-icons.net/lorc/originals/interdiction.html
+auto-repair.png				by Lorc under CC BY 3.0 http://game-icons.net/lorc/originals/auto-repair.html
+hazard-sign.png				by Lorc under CC BY 3.0 http://game-icons.net/lorc/originals/hazard-sign.html
+magnifying-glass.png		by Lorc under CC BY 3.0 http://game-icons.net/lorc/originals/magnifying-glass.html
+
+power-button.png			by Lord Berandas under CC BY 3.0 http://game-icons.net/lord-berandas/originals/power-button.html
+
+cancel.png					by Sbed under CC BY 3.0 http://game-icons.net/sbed/originals/cancel.html
+
