@@ -52,6 +52,7 @@ texture = ExtResource( 3 )
 
 [node name="parallax_bg" type="ParallaxBackground" parent="grid"]
 
+editor/display_folded = true
 layer = -1
 offset = Vector2( 0, 0 )
 rotation = 0.0
@@ -84,6 +85,7 @@ stretch_mode = 2
 
 [node name="tilemap" type="TileMap" parent="grid"]
 
+visibility/visible = false
 mode = 0
 tile_set = ExtResource( 5 )
 cell/size = Vector2( 20, 20 )
@@ -417,16 +419,34 @@ shortcut = null
 icon = ExtResource( 16 )
 flat = false
 
+[connection signal="redo_history_empty" from="grid" to="." method="_on_grid_redo_history_empty"]
+
+[connection signal="redo_history_not_empty" from="grid" to="." method="_on_grid_redo_history_not_empty"]
+
+[connection signal="undo_history_empty" from="grid" to="." method="_on_grid_undo_history_empty"]
+
+[connection signal="undo_history_not_empty" from="grid" to="." method="_on_grid_undo_history_not_empty"]
+
 [connection signal="tile_type_selected" from="canvas_layer/ui/tile_list" to="." method="_on_tile_list_tile_type_selected"]
 
 [connection signal="pressed" from="canvas_layer/ui/editor_command_panel_container/h_box_container/select_button" to="." method="_on_select_button_pressed"]
 
 [connection signal="pressed" from="canvas_layer/ui/editor_command_panel_container/h_box_container/erase_button" to="." method="_on_erase_button_pressed"]
 
+[connection signal="pressed" from="canvas_layer/ui/editor_command_panel_container/h_box_container/undo_button" to="." method="_on_undo_button_pressed"]
+
+[connection signal="pressed" from="canvas_layer/ui/editor_command_panel_container/h_box_container/redo_button" to="." method="_on_redo_button_pressed"]
+
 [connection signal="pressed" from="canvas_layer/ui/editor_command_panel_container/h_box_container/zoom_in_button" to="." method="_on_zoom_in_button_pressed"]
 
 [connection signal="pressed" from="canvas_layer/ui/editor_command_panel_container/h_box_container/zoom_out_button" to="." method="_on_zoom_out_button_pressed"]
 
 [connection signal="pressed" from="canvas_layer/ui/editor_command_panel_container/h_box_container/reset_zoom_button" to="." method="_on_reset_zoom_button_pressed"]
+
+[connection signal="pressed" from="canvas_layer/ui/editor_command_panel_container/h_box_container/save_button" to="." method="_on_save_button_pressed"]
+
+[connection signal="pressed" from="canvas_layer/ui/editor_command_panel_container/h_box_container/load_button" to="." method="_on_load_button_pressed"]
+
+[connection signal="pressed" from="canvas_layer/ui/editor_command_panel_container/h_box_container/exit_button" to="." method="_on_exit_button_pressed"]
 
 

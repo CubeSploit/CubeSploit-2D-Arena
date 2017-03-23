@@ -4,32 +4,66 @@ onready var ship_editor = get_parent()
 onready var camera = ship_editor.get_node("camera_2d")
 onready var grid_layer = get_node("parallax_bg/parallax_layer")
 onready var grid_texture = get_node("parallax_bg/parallax_layer/texture_frame")
-onready var tilemap = get_node("tilemap")
+#onready var tilemap = get_node("tilemap")
 onready var cursor = get_node("cursor")
 
 var grid_texture_virtual_size = OS.get_window_size()
 
 var wheel_pressed = false
 
-var tiles = {}
+var grid_data = {
+	"tiles": {}
+}
+var undo_history = []
+var redo_history = []
+signal undo_history_empty()
+signal undo_history_not_empty()
+signal redo_history_empty()
+signal redo_history_not_empty()
+
+
 
 func _ready():
 	cursor.set_offset(Tiles.size/2)
 	set_process_unhandled_input(true)
 	pass
-	
+
 
 func set_tile( grid_pos, tile_type ):
-	tilemap.set_cell(grid_pos.x, grid_pos.y, tile_type)
-	tiles[grid_pos] = {
+	doo()
+#	tilemap.set_cell(grid_pos.x, grid_pos.y, tile_type)
+	grid_data.tiles[vec2_to_str(grid_pos)] = {
 		"type": tile_type,
 		"connections": [true,true,true,true]
 	}
 	update()
 func erase_tile( grid_pos ):
-	tilemap.set_cell( grid_pos.x, grid_pos.y, -1)
-	tiles.erase(grid_pos)
+	doo()
+#	tilemap.set_cell( grid_pos.x, grid_pos.y, -1)
+	grid_data.tiles.erase(vec2_to_str(grid_pos))
 	update()
+
+
+
+func doo():
+	undo_history.push_front( grid_data.to_json() )
+	redo_history.clear()
+	emit_signal("undo_history_not_empty")
+func undo():
+	redo_history.push_front( grid_data.to_json() )
+	grid_data.parse_json( undo_history.pop_front())
+	if( undo_history.empty() ):
+		emit_signal("undo_history_empty")
+	emit_signal("redo_history_not_empty")
+	update()
+func redo():
+	undo_history.push_front(grid_data.to_json())
+	grid_data.parse_json( redo_history.pop_front())
+	if( redo_history.empty() ):
+		emit_signal("redo_history_empty")
+	emit_signal("undo_history_not_empty")
+	update()
+
 
 
 func zoom_in():
@@ -45,6 +79,7 @@ func zoom(zoom_where):
 	if( zoom_where == "reset" ):
 		new_size = OS.get_window_size()
 		new_zoom = Vector2(1,1)
+		camera.set_pos(Vector2(0,0))
 	else:
 		var tiles_screen_dim = OS.get_window_size()/Tiles.size/10
 		var added_size = Tiles.size * tiles_screen_dim
@@ -55,7 +90,7 @@ func zoom(zoom_where):
 
 	if( new_zoom.x < 0.3 || new_zoom.y < 0.3):
 		return
-		
+	
 	camera.set_zoom( new_zoom )
 	grid_layer.set_motion_scale(new_zoom)
 	# texture size should be changed only on zoom superior to 1, else it is buggy
@@ -64,19 +99,16 @@ func zoom(zoom_where):
 		grid_texture.set_size(new_size)
 	grid_texture_virtual_size = new_size
 
-
-
-
-
-
 	
 func _draw():
-	var keys = tiles.keys()
+	var keys = grid_data.tiles.keys()
 	var key_index_range = range(keys.size())
 	for i in key_index_range:
 		var key = keys[i]
-		var tile = tiles[key]
-		var pos = grid_pos_to_pos(key)
+		var tile = grid_data.tiles[key]
+		var grid_pos = str_to_vec2(key)
+		var pos = grid_pos_to_pos(grid_pos)
+		draw_texture( Tiles.Data[tile.type].tex, pos)
 		for d in global.direction_iterator:
 			if( tile.connections[0] ):
 				draw_texture( Tiles.connection_textures[d], pos )
@@ -109,7 +141,11 @@ func on_mouse_motion( mouse_pos ):
 
 
 
-
+func vec2_to_str(v):
+	return str(v.x) + "," + str(v.y)
+func str_to_vec2(s):
+	var ex = s.split(",")
+	return Vector2(int(ex[0]),int(ex[1]))
 
 func cursor_pos_to_real_pos( cursor_pos ):
 	return (camera.get_pos() - (OS.get_window_size()/2)*camera.get_zoom()) + cursor_pos*camera.get_zoom()
@@ -117,7 +153,7 @@ func cursor_pos_to_real_pos( cursor_pos ):
 func pos_to_grid_pos( pos ):
 	return (pos / Tiles.size).floor()
 
-func grid_pos_to_pos( grid_pos):
+func grid_pos_to_pos( grid_pos ):
 	return grid_pos*Tiles.size
 
 

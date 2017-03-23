@@ -8,3 +8,9 @@ var direction = {
 	"COUNT": 4
 }
 var direction_iterator = range(4)
+
+
+const Scenes = {
+	"MAIN": preload("res://main.tscn"),
+	"SHIP_EDITOR": preload("res://ship_editor/ship_editor.tscn")
+}
