@@ -1,0 +1,43 @@
+Author's Credit file
+====================
+
+
+This file is listing each files present in this repository, its author and its corresponding license.
+
+Each corresponding license is fully described in the licenses/ folder.
+Other text files (.txt, .cpp, .h, .sh, ...), except licensing, are licensed using the GPLv3+ license.
+
+File names followed by (m) and that have a source URL have been modified.
+
+Latest update: 2017/03/23
+
+=====================
+==  Icons : icons/ ==
+=====================
+
+
+Name                                Author          License         Source URL
+------------------------------------------------------------------------------------------------------------------------
+anticlockwise-rotation.png          Delapouite      CC BY 3.0       http://game-icons.net/delapouite/gui/anticlockwise-rotation.html
+arrow-cursor.png                    Delapouite      CC BY 3.0       http://game-icons.net/delapouite/gui/arrow-cursor.html
+clockwise-rotation.png              Delapouite      CC BY 3.0       http://game-icons.net/delapouite/gui/clockwise-rotation.html
+contract.png                        Delapouite      CC BY 3.0       http://game-icons.net/delapouite/gui/contract.html
+expand.png                          Delapouite      CC BY 3.0       http://game-icons.net/delapouite/gui/expand.html
+load.png                            Delapouite      CC BY 3.0       http://game-icons.net/delapouite/gui/load.html
+position-marker.png                 Delapouite      CC BY 3.0       http://game-icons.net/delapouite/gui/position-marker.html
+save.png                            Delapouite      CC BY 3.0       http://game-icons.net/delapouite/gui/save.html
+entry-door.png                      Delapouite      CC BY 3.0       http://game-icons.net/delapouite/originals/entry-door.html
+exit-door.png                       Delapouite      CC BY 3.0       http://game-icons.net/delapouite/originals/exit-door.html
+trash-can.png                       Delapouite      CC BY 3.0       http://game-icons.net/delapouite/originals/trash-can.html
+stack.png                           Delapouite      CC BY 3.0       http://game-icons.net/delapouite/originals/stack.html
+transform.png                       Delapouite      CC BY 3.0       http://game-icons.net/delapouite/gui/transform.html
+info.png                            Delapouite      CC BY 3.0       http://game-icons.net/delapouite/originals/info.html
+large-paint-brush.png               Delapouite      CC BY 3.0       http://game-icons.net/delapouite/originals/large-paint-brush.html
+paint-roller.png                    Delapouite      CC BY 3.0       http://game-icons.net/delapouite/originals/paint-roller.html
+interdiction.png                    Lorc            CC BY 3.0       http://game-icons.net/lorc/originals/interdiction.html
+auto-repair.png                     Lorc            CC BY 3.0       http://game-icons.net/lorc/originals/auto-repair.html
+hazard-sign.png                     Lorc            CC BY 3.0       http://game-icons.net/lorc/originals/hazard-sign.html
+magnifying-glass.png                Lorc            CC BY 3.0       http://game-icons.net/lorc/originals/magnifying-glass.html
+power-button.png                    Lord Berandas   CC BY 3.0       http://game-icons.net/lord-berandas/originals/power-button.html
+cancel.png                          Sbed            CC BY 3.0       http://game-icons.net/sbed/originals/cancel.html
+
