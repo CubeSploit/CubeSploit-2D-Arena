@@ -9,6 +9,9 @@ onready var erase_button = get_node("canvas_layer/ui/editor_command_panel_contai
 onready var undo_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/undo_button")
 onready var redo_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/redo_button")
 
+onready var save_file_dialog = get_node("canvas_layer/ui/save_file_dialog")
+onready var load_file_dialog = get_node("canvas_layer/ui/load_file_dialog")
+
 const MouseMode = {
 	"SELECTION": 0,
 	"TILE": 1,
@@ -19,7 +22,7 @@ var selected_tile_type = 0
 var mouse_mode = MouseMode.SELECTION
 var wheel_pressed = false
 
-var file_name = null
+var file_path = null
 var modifications = false
 
 func _ready():
@@ -85,9 +88,23 @@ func _on_grid_redo_history_not_empty():
 
 
 func _on_save_button_pressed():
-	pass # replace with function body
+	save_file_dialog.popup_centered()
+func _on_file_dialog_file_selected( path ):
+	var content = grid.get_grid_data()
+	var file = File.new()
+	file.open(path, file.WRITE)
+	file.store_string(content)
+	file.close()
+	file_path = path
 func _on_load_button_pressed():
-	pass # replace with function body
+	load_file_dialog.popup_centered()
+func _on_load_file_dialog_file_selected( path ):
+	var file = File.new()
+	file.open(path, file.READ)
+	var content = file.get_as_text()
+	file.close()
+	grid.load_grid_data(content)
+	file_path = path
 
 
 
@@ -103,6 +120,7 @@ func _on_reset_zoom_button_pressed():
 
 func _on_exit_button_pressed():
 	get_tree().change_scene_to(global.Scenes.MAIN)
+
 
 
 

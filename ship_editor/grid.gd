@@ -65,7 +65,11 @@ func redo():
 	emit_signal("undo_history_not_empty")
 	update()
 
-
+func get_grid_data():
+	return var2str(grid_data)
+func load_grid_data(grid_data):
+	self.grid_data = str2var(grid_data)
+	update()
 
 func zoom_in():
 	zoom("in")
