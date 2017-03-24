@@ -1,19 +1,21 @@
 [gd_scene load_steps=2 format=1]
 
-[ext_resource path="res://ui/tile_list.gd" type="Script" id=1]
+[ext_resource path="res://ui/button_list.gd" type="Script" id=1]
 
-[node name="tile_list" type="Control"]
+[node name="button_list" type="Control"]
 
-rect/min_size = Vector2( 115, 100 )
+rect/min_size = Vector2( 70, 100 )
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 115.0
+margin/right = 70.0
 margin/bottom = 600.0
 script/script = ExtResource( 1 )
+list_node_path = "/root/Tiles"
+list_name = "Data"
 
 [node name="panel" type="Panel" parent="."]
 
@@ -32,11 +34,11 @@ margin/bottom = 0.0
 
 anchor/right = 1
 anchor/bottom = 1
-rect/min_size = Vector2( 115, 100 )
+rect/min_size = Vector2( 70, 100 )
 focus/ignore_mouse = false
 focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
+size_flags/horizontal = 3
+size_flags/vertical = 3
 margin/left = 0.0
 margin/top = 0.0
 margin/right = 0.0
@@ -72,7 +74,7 @@ size_flags/horizontal = 3
 size_flags/vertical = 3
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 115.0
+margin/right = 70.0
 margin/bottom = 0.0
 alignment = 0
 

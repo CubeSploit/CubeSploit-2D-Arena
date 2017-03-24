@@ -16,6 +16,7 @@ const Type = {
 	'Thruster': 2
 }
 
+
 const Data = [
 	{
 		'name': 'Core',
@@ -30,5 +31,6 @@ const Data = [
 		'tex': preload("res://Tiles/Thruster.png")
 	}
 ]
+
 
 

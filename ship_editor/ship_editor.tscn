@@ -1,21 +1,20 @@
-[gd_scene load_steps=17 format=1]
+[gd_scene load_steps=16 format=1]
 
 [ext_resource path="res://ship_editor/ship_editor.gd" type="Script" id=1]
 [ext_resource path="res://ship_editor/grid.gd" type="Script" id=2]
 [ext_resource path="res://ship_editor/cursor.png" type="Texture" id=3]
 [ext_resource path="res://ship_editor/grid.png" type="Texture" id=4]
-[ext_resource path="res://Tiles/tileset.tres" type="TileSet" id=5]
-[ext_resource path="res://ui/tile_list.tscn" type="PackedScene" id=6]
-[ext_resource path="res://icons/arrow-cursor.png" type="Texture" id=7]
-[ext_resource path="res://icons/trash-can.png" type="Texture" id=8]
-[ext_resource path="res://icons/anticlockwise-rotation.png" type="Texture" id=9]
-[ext_resource path="res://icons/clockwise-rotation.png" type="Texture" id=10]
-[ext_resource path="res://icons/contract.png" type="Texture" id=11]
-[ext_resource path="res://icons/expand.png" type="Texture" id=12]
-[ext_resource path="res://icons/cancel.png" type="Texture" id=13]
-[ext_resource path="res://icons/save.png" type="Texture" id=14]
-[ext_resource path="res://icons/load.png" type="Texture" id=15]
-[ext_resource path="res://icons/exit-door.png" type="Texture" id=16]
+[ext_resource path="res://ui/button_list.tscn" type="PackedScene" id=5]
+[ext_resource path="res://icons/arrow-cursor.png" type="Texture" id=6]
+[ext_resource path="res://icons/trash-can.png" type="Texture" id=7]
+[ext_resource path="res://icons/anticlockwise-rotation.png" type="Texture" id=8]
+[ext_resource path="res://icons/clockwise-rotation.png" type="Texture" id=9]
+[ext_resource path="res://icons/contract.png" type="Texture" id=10]
+[ext_resource path="res://icons/expand.png" type="Texture" id=11]
+[ext_resource path="res://icons/cancel.png" type="Texture" id=12]
+[ext_resource path="res://icons/save.png" type="Texture" id=13]
+[ext_resource path="res://icons/load.png" type="Texture" id=14]
+[ext_resource path="res://icons/exit-door.png" type="Texture" id=15]
 
 [node name="ship_editor" type="Node2D"]
 
@@ -82,25 +81,6 @@ margin/bottom = 600.0
 texture = ExtResource( 4 )
 stretch_mode = 2
 
-[node name="tilemap" type="TileMap" parent="grid"]
-
-visibility/visible = false
-mode = 0
-tile_set = ExtResource( 5 )
-cell/size = Vector2( 20, 20 )
-cell/quadrant_size = 16
-cell/custom_transform = Matrix32( 1, 0, 0, 1, 0, 0 )
-cell/half_offset = 2
-cell/tile_origin = 0
-cell/y_sort = false
-collision/use_kinematic = false
-collision/friction = 1.0
-collision/bounce = 0.0
-collision/layers = 1
-collision/mask = 1
-occluder/light_mask = 1
-tile_data = IntArray(  )
-
 [node name="canvas_layer" type="CanvasLayer" parent="."]
 
 layer = 1
@@ -119,7 +99,40 @@ margin/top = 0.0
 margin/right = 40.0
 margin/bottom = 40.0
 
-[node name="tile_list" parent="canvas_layer/ui" instance=ExtResource( 6 )]
+[node name="tab_container" type="TabContainer" parent="canvas_layer/ui"]
+
+rect/min_size = Vector2( 150, 600 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 78.0
+margin/bottom = 600.0
+tab_align = 0
+tabs_visible = true
+
+[node name="Tiles" parent="canvas_layer/ui/tab_container" instance=ExtResource( 5 )]
+
+anchor/right = 1
+anchor/bottom = 1
+margin/left = 4.0
+margin/top = 32.0
+margin/right = 4.0
+margin/bottom = 4.0
+
+[node name="Misc" parent="canvas_layer/ui/tab_container" instance=ExtResource( 5 )]
+
+visibility/visible = false
+anchor/right = 1
+anchor/bottom = 1
+margin/left = 4.0
+margin/top = 32.0
+margin/right = 4.0
+margin/bottom = 4.0
+list_node_path = "/root/ship_editor"
+list_name = "MiscButtonList"
 
 [node name="editor_command_panel_container" type="PanelContainer" parent="canvas_layer/ui"]
 
@@ -170,7 +183,7 @@ margin/bottom = 38.0
 toggle_mode = true
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 7 )
+icon = ExtResource( 6 )
 flat = false
 
 [node name="erase_button" type="Button" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -186,7 +199,7 @@ margin/bottom = 38.0
 toggle_mode = true
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 8 )
+icon = ExtResource( 7 )
 flat = false
 
 [node name="v_separator_7" type="VSeparator" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -225,7 +238,7 @@ disabled = true
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 9 )
+icon = ExtResource( 8 )
 flat = false
 
 [node name="redo_button" type="Button" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -242,7 +255,7 @@ disabled = true
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 10 )
+icon = ExtResource( 9 )
 flat = false
 
 [node name="v_separator_1" type="VSeparator" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -280,7 +293,7 @@ margin/bottom = 38.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 11 )
+icon = ExtResource( 10 )
 flat = false
 
 [node name="zoom_out_button" type="Button" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -296,7 +309,7 @@ margin/bottom = 38.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 12 )
+icon = ExtResource( 11 )
 flat = false
 
 [node name="reset_zoom_button" type="Button" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -312,7 +325,7 @@ margin/bottom = 38.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 13 )
+icon = ExtResource( 12 )
 flat = false
 
 [node name="v_separator_3" type="VSeparator" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -350,7 +363,7 @@ margin/bottom = 38.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 14 )
+icon = ExtResource( 13 )
 flat = false
 
 [node name="load_button" type="Button" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -366,7 +379,7 @@ margin/bottom = 38.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 15 )
+icon = ExtResource( 14 )
 flat = false
 
 [node name="v_separator_6" type="VSeparator" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -404,11 +417,12 @@ margin/bottom = 38.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 16 )
+icon = ExtResource( 15 )
 flat = false
 
 [node name="save_file_dialog" type="FileDialog" parent="canvas_layer/ui"]
 
+visibility/visible = false
 anchor/left = 3
 anchor/top = 3
 anchor/right = 3
@@ -432,6 +446,7 @@ show_hidden_files = true
 
 [node name="load_file_dialog" type="FileDialog" parent="canvas_layer/ui"]
 
+visibility/visible = false
 anchor/left = 3
 anchor/top = 3
 anchor/right = 3
@@ -461,7 +476,7 @@ show_hidden_files = true
 
 [connection signal="undo_history_not_empty" from="grid" to="." method="_on_grid_undo_history_not_empty"]
 
-[connection signal="tile_type_selected" from="canvas_layer/ui/tile_list" to="." method="_on_tile_list_tile_type_selected"]
+[connection signal="button_clicked" from="canvas_layer/ui/tab_container/Tiles" to="." method="_on_Tiles_button_clicked"]
 
 [connection signal="pressed" from="canvas_layer/ui/editor_command_panel_container/h_box_container/select_button" to="." method="_on_select_button_pressed"]
 

@@ -4,7 +4,6 @@ onready var ship_editor = get_parent()
 onready var camera = ship_editor.get_node("camera_2d")
 onready var grid_layer = get_node("parallax_bg/parallax_layer")
 onready var grid_texture = get_node("parallax_bg/parallax_layer/texture_frame")
-#onready var tilemap = get_node("tilemap")
 onready var cursor = get_node("cursor")
 
 var grid_texture_virtual_size = OS.get_window_size()
@@ -31,7 +30,6 @@ func _ready():
 
 func set_tile( grid_pos, tile_type ):
 	doo()
-#	tilemap.set_cell(grid_pos.x, grid_pos.y, tile_type)
 	grid_data.tiles[grid_pos] = {
 		"type": tile_type,
 		"connections": [true,true,true,true]
@@ -39,7 +37,6 @@ func set_tile( grid_pos, tile_type ):
 	update()
 func erase_tile( grid_pos ):
 	doo()
-#	tilemap.set_cell( grid_pos.x, grid_pos.y, -1)
 	grid_data.tiles.erase(grid_pos)
 	update()
 
