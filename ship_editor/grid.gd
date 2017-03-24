@@ -32,7 +32,7 @@ func _ready():
 func set_tile( grid_pos, tile_type ):
 	doo()
 #	tilemap.set_cell(grid_pos.x, grid_pos.y, tile_type)
-	grid_data.tiles[vec2_to_str(grid_pos)] = {
+	grid_data.tiles[grid_pos] = {
 		"type": tile_type,
 		"connections": [true,true,true,true]
 	}
@@ -40,25 +40,26 @@ func set_tile( grid_pos, tile_type ):
 func erase_tile( grid_pos ):
 	doo()
 #	tilemap.set_cell( grid_pos.x, grid_pos.y, -1)
-	grid_data.tiles.erase(vec2_to_str(grid_pos))
+	grid_data.tiles.erase(grid_pos)
 	update()
 
 
 
 func doo():
-	undo_history.push_front( grid_data.to_json() )
+	undo_history.push_front( var2str(grid_data) )
 	redo_history.clear()
 	emit_signal("undo_history_not_empty")
+	emit_signal("redo_history_empty")
 func undo():
-	redo_history.push_front( grid_data.to_json() )
-	grid_data.parse_json( undo_history.pop_front())
+	redo_history.push_front( var2str(grid_data) )
+	grid_data = str2var( undo_history.pop_front())
 	if( undo_history.empty() ):
 		emit_signal("undo_history_empty")
 	emit_signal("redo_history_not_empty")
 	update()
 func redo():
-	undo_history.push_front(grid_data.to_json())
-	grid_data.parse_json( redo_history.pop_front())
+	undo_history.push_front(var2str(grid_data))
+	grid_data= str2var( redo_history.pop_front() )
 	if( redo_history.empty() ):
 		emit_signal("redo_history_empty")
 	emit_signal("undo_history_not_empty")
@@ -106,8 +107,7 @@ func _draw():
 	for i in key_index_range:
 		var key = keys[i]
 		var tile = grid_data.tiles[key]
-		var grid_pos = str_to_vec2(key)
-		var pos = grid_pos_to_pos(grid_pos)
+		var pos = grid_pos_to_pos(key)
 		draw_texture( Tiles.Data[tile.type].tex, pos)
 		for d in global.direction_iterator:
 			if( tile.connections[0] ):
@@ -139,13 +139,6 @@ func on_mouse_motion( mouse_pos ):
 	var cursor_grid_pos = pos_to_grid_pos(cursor_real_pos)
 	cursor.set_pos(grid_pos_to_pos(cursor_grid_pos))
 
-
-
-func vec2_to_str(v):
-	return str(v.x) + "," + str(v.y)
-func str_to_vec2(s):
-	var ex = s.split(",")
-	return Vector2(int(ex[0]),int(ex[1]))
 
 func cursor_pos_to_real_pos( cursor_pos ):
 	return (camera.get_pos() - (OS.get_window_size()/2)*camera.get_zoom()) + cursor_pos*camera.get_zoom()
