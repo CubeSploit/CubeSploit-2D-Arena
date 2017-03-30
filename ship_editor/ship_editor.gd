@@ -100,7 +100,7 @@ func _on_file_dialog_file_selected( path ):
 	var content = grid.get_grid_data()
 	var file = File.new()
 	file.open(path, file.WRITE)
-	file.store_string(content)
+	file.store_var(content)
 	file.close()
 	file_path = path
 func _on_load_button_pressed():
@@ -108,7 +108,7 @@ func _on_load_button_pressed():
 func _on_load_file_dialog_file_selected( path ):
 	var file = File.new()
 	file.open(path, file.READ)
-	var content = file.get_as_text()
+	var content = file.get_var()
 	file.close()
 	grid.load_grid_data(content)
 	file_path = path

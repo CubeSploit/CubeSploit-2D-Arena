@@ -43,29 +43,29 @@ func erase_tile( grid_pos ):
 
 
 func doo():
-	undo_history.push_front( var2str(grid_data) )
+	undo_history.push_front( var2bytes(grid_data) )
 	redo_history.clear()
 	emit_signal("undo_history_not_empty")
 	emit_signal("redo_history_empty")
 func undo():
-	redo_history.push_front( var2str(grid_data) )
-	grid_data = str2var( undo_history.pop_front())
+	redo_history.push_front( var2bytes(grid_data) )
+	grid_data = bytes2var( undo_history.pop_front())
 	if( undo_history.empty() ):
 		emit_signal("undo_history_empty")
 	emit_signal("redo_history_not_empty")
 	update()
 func redo():
-	undo_history.push_front(var2str(grid_data))
-	grid_data= str2var( redo_history.pop_front() )
+	undo_history.push_front(var2bytes(grid_data))
+	grid_data= bytes2var( redo_history.pop_front() )
 	if( redo_history.empty() ):
 		emit_signal("redo_history_empty")
 	emit_signal("undo_history_not_empty")
 	update()
 
 func get_grid_data():
-	return var2str(grid_data)
+	return var2bytes(grid_data)
 func load_grid_data(grid_data):
-	self.grid_data = str2var(grid_data)
+	self.grid_data = bytes2var(grid_data)
 	update()
 
 func zoom_in():
