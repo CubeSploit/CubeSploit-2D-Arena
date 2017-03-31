@@ -28,7 +28,7 @@ const Data = [
 	},
 	{
 		'name': 'Thruster',
-		'tex': preload("res://Tiles/Thruster.png")
+		'tex': preload("res://Tiles/thruster.png")
 	}
 ]
 
