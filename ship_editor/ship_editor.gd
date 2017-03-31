@@ -10,8 +10,8 @@ onready var erase_button = get_node("canvas_layer/ui/editor_command_panel_contai
 onready var undo_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/undo_button")
 onready var redo_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/redo_button")
 
-onready var save_file_dialog = get_node("canvas_layer/ui/save_file_dialog")
-onready var load_file_dialog = get_node("canvas_layer/ui/load_file_dialog")
+onready var save_file_dialog = get_node("canvas_layer/ui/editor_command_panel_container/save_file_dialog")
+onready var load_file_dialog = get_node("canvas_layer/ui/editor_command_panel_container/load_file_dialog")
 
 const MouseMode = {
 	"SELECTION": 0,
@@ -60,30 +60,37 @@ func _unhandled_input(ev):
 func _on_Tiles_button_clicked( button_index ):
 	selected_tile_type = button_index
 	mouse_mode = MouseMode.TILE
-	misc_tile_list.set_all_pressed(false)
+	misc_tile_list.unselect_all()
+	select_button.set_pressed(false)
+	erase_button.set_pressed(false)
+
+func _on_Tiles_item_selected( index ):
+	selected_tile_type = index
+	mouse_mode = MouseMode.TILE
+	misc_tile_list.unselect_all()
 	select_button.set_pressed(false)
 	erase_button.set_pressed(false)
 
 
-func _on_Misc_button_clicked( button_index ):
-	selected_tile_type = button_index
+func _on_Misc_item_selected( index ):
+	selected_tile_type = index
 	mouse_mode = MouseMode.MISC_TILE
-	if( TilesMisc.is_wire_mode( button_index ) ):
+	if( TilesMisc.is_wire_mode( index ) ):
 		mouse_mode = MouseMode.WIRE
-	tile_list.set_all_pressed(false)
+	tile_list.unselect_all()
 	select_button.set_pressed(false)
 	erase_button.set_pressed(false)
 
 func _on_select_button_pressed():
 	mouse_mode = MouseMode.SELECTION
-	tile_list.set_all_pressed(false)
-	misc_tile_list.set_all_pressed(false)
+	tile_list.unselect_all()
+	misc_tile_list.unselect_all()
 	erase_button.set_pressed(false)
 
 func _on_erase_button_pressed():
 	mouse_mode = MouseMode.ERASER
-	tile_list.set_all_pressed(false)
-	misc_tile_list.set_all_pressed(false)
+	tile_list.unselect_all()
+	misc_tile_list.unselect_all()
 	select_button.set_pressed(false)
 
 	
@@ -137,6 +144,9 @@ func _on_reset_zoom_button_pressed():
 
 func _on_exit_button_pressed():
 	get_tree().change_scene_to(global.Scenes.MAIN)
+
+
+
 
 
 
