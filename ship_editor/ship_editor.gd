@@ -4,7 +4,7 @@ onready var camera = get_node('camera_2d')
 onready var grid = get_node("grid")
 
 onready var tile_list = get_node("canvas_layer/ui/tab_container/Tiles")
-onready var misc_command_list = get_node("canvas_layer/ui/tab_container/Misc")
+onready var misc_tile_list = get_node("canvas_layer/ui/tab_container/Misc")
 onready var select_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/select_button")
 onready var erase_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/erase_button")
 onready var undo_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/undo_button")
@@ -16,12 +16,11 @@ onready var load_file_dialog = get_node("canvas_layer/ui/load_file_dialog")
 const MouseMode = {
 	"SELECTION": 0,
 	"TILE": 1,
-	"ERASER": 2
+	"MISC_TILE": 2,
+	"WIRE": 3,
+	"ERASER": 4
 }
 
-const MiscButtonList = [
-	
-]
 
 var selected_tile_type = 0
 var mouse_mode = MouseMode.SELECTION
@@ -31,8 +30,6 @@ var file_path = null
 var modifications = false
 
 func _ready():
-	misc_command_list.list_node_path = get_path()
-	misc_command_list.list_name = "MiscButtonList"
 	set_process_unhandled_input(true)
 	
 
@@ -63,17 +60,30 @@ func _unhandled_input(ev):
 func _on_Tiles_button_clicked( button_index ):
 	selected_tile_type = button_index
 	mouse_mode = MouseMode.TILE
+	misc_tile_list.set_all_pressed(false)
+	select_button.set_pressed(false)
+	erase_button.set_pressed(false)
+
+
+func _on_Misc_button_clicked( button_index ):
+	selected_tile_type = button_index
+	mouse_mode = MouseMode.MISC_TILE
+	if( TilesMisc.is_wire_mode( button_index ) ):
+		mouse_mode = MouseMode.WIRE
+	tile_list.set_all_pressed(false)
 	select_button.set_pressed(false)
 	erase_button.set_pressed(false)
 
 func _on_select_button_pressed():
 	mouse_mode = MouseMode.SELECTION
 	tile_list.set_all_pressed(false)
+	misc_tile_list.set_all_pressed(false)
 	erase_button.set_pressed(false)
 
 func _on_erase_button_pressed():
 	mouse_mode = MouseMode.ERASER
 	tile_list.set_all_pressed(false)
+	misc_tile_list.set_all_pressed(false)
 	select_button.set_pressed(false)
 
 	

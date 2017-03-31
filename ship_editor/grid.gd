@@ -5,13 +5,16 @@ onready var camera = ship_editor.get_node("camera_2d")
 onready var grid_layer = get_node("parallax_bg/parallax_layer")
 onready var grid_texture = get_node("parallax_bg/parallax_layer/texture_frame")
 onready var cursor = get_node("cursor")
+onready var selected_tile_wire_1 = get_node("selected_tile_wire_1")
+onready var selected_tile_wire_2 = get_node("selected_tile_wire_2")
 
 var grid_texture_virtual_size = OS.get_window_size()
 
 var wheel_pressed = false
 
 var grid_data = {
-	"tiles": {}
+	"tiles": {},
+	"wires": {}
 }
 var undo_history = []
 var redo_history = []
@@ -23,9 +26,7 @@ signal redo_history_not_empty()
 
 
 func _ready():
-	cursor.set_offset(Tiles.size/2)
 	set_process_unhandled_input(true)
-	pass
 
 
 func set_tile( grid_pos, tile_type ):
@@ -40,6 +41,66 @@ func erase_tile( grid_pos ):
 	grid_data.tiles.erase(grid_pos)
 	update()
 
+var wire_click_first
+var wire_click_second
+func wire_click( grid_pos, wire_type ):
+	var reset = false
+	if( wire_click_first == null ):
+		wire_click_first = grid_pos
+	elif( wire_click_second == null ):
+		if( grid_pos.distance_to(wire_click_first) == 1 ):
+			wire_click_second = grid_pos
+		else:
+			reset = true
+	else:
+		if( grid_pos.distance_to(wire_click_second) == 1 ):
+			set_wire( wire_click_first, wire_click_second, grid_pos, wire_type )
+			wire_click_first = wire_click_second
+			wire_click_second = grid_pos
+		else:
+			reset = true
+	if( reset ):
+		wire_click_first = grid_pos
+		wire_click_second = null
+
+	update_wire_mode_render()
+
+func set_wire( p1, p2, p3, wire_type):
+	if( grid_data.tiles.has(p2) ):
+		doo()
+		grid_data.wires[p2] = {
+			"type": wire_type,
+			"pin": p1,
+			"pout": p3
+		}
+		update()
+	else:
+		reset_wire_mode()
+
+func erase_wire( grid_pos ):
+	doo()
+	grid_data.wires.erase(grid_pos)
+	update()
+
+func reset_wire_mode():
+	wire_click_first = null
+	wire_click_second = null
+	selected_tile_wire_1.hide()
+	selected_tile_wire_2.hide()
+	update_wire_mode_render()
+	
+func update_wire_mode_render():
+	if( wire_click_first != null ):
+		selected_tile_wire_1.show()
+		selected_tile_wire_1.set_pos( grid_pos_to_pos( wire_click_first ))
+	else:
+		selected_tile_wire_1.hide()
+		
+	if( wire_click_second != null ):
+		selected_tile_wire_2.show()
+		selected_tile_wire_2.set_pos( grid_pos_to_pos( wire_click_second ))
+	else:
+		selected_tile_wire_2.hide()
 
 
 func doo():
@@ -113,21 +174,56 @@ func _draw():
 		for d in global.direction_iterator:
 			if( tile.connections[0] ):
 				draw_texture( Tiles.connection_textures[d], pos )
+				
+	keys = grid_data.wires.keys()
+	key_index_range = range(keys.size())
+	for i in key_index_range:
+		var key = keys[i]
+		var wire = grid_data.wires[key]
+		var pos = grid_pos_to_pos(key)
+		if( wire.type == TilesMisc.Type.LogicWire ):
+			draw_logic_wire( wire.pin, pos, wire.pout)
+		elif( wire.type == TilesMisc.Type.EnergyWire ):
+			draw_energy_wire( wire.pin, pos, wire.pout )
+	
+
+func draw_logic_wire( pin, pcenter, pout):
+	pcenter = pcenter + TilesMisc.size/2
+	pin = pcenter + (grid_pos_to_pos(pin)+ TilesMisc.size/2 - pcenter) /2
+	pout = pcenter + (grid_pos_to_pos(pout)+ TilesMisc.size/2 - pcenter) /2
+	draw_line(pin, pcenter, Color(0,0,0),2)
+	draw_line(pcenter, pout, Color(0,0,0),2)
+	
+func draw_energy_wire( pin, pcenter, pout):
+	pcenter = pcenter + TilesMisc.size/2
+	pin = pcenter + (grid_pos_to_pos(pin)+ TilesMisc.size/2 - pcenter) /2
+	pout = pcenter + (grid_pos_to_pos(pout)+ TilesMisc.size/2 - pcenter) /2
+	draw_line(pin, pcenter, Color(0,0,0),6)
+	draw_line(pin, pcenter, Color(255,255,255),2)
+	draw_line(pcenter, pout, Color(0,0,0),6)
+	draw_line(pcenter, pout, Color(255,255,255),2)
 
 
 
 
-
-func on_left_click( cursor_pos ):
-	var cursor_real_pos = cursor_pos_to_real_pos( cursor_pos )
-	var cursor_grid_pos = pos_to_grid_pos(cursor_real_pos)
+func on_left_click( mouse_pos ):
+	var mouse_real_pos = mouse_pos_to_real_pos( mouse_pos )
+	var mouse_grid_pos = pos_to_grid_pos(mouse_real_pos)
 	if( ship_editor.mouse_mode == ship_editor.MouseMode.TILE ):
-		set_tile(cursor_grid_pos, ship_editor.selected_tile_type)
+		set_tile(mouse_grid_pos, ship_editor.selected_tile_type)
 	elif( ship_editor.mouse_mode == ship_editor.MouseMode.ERASER ):
-		erase_tile( cursor_grid_pos )
+		if( grid_data.wires.has(mouse_grid_pos) ):
+			erase_wire( mouse_grid_pos )
+		else:
+			erase_tile( mouse_grid_pos )
+	elif( ship_editor.mouse_mode == ship_editor.MouseMode.WIRE ):
+		wire_click( mouse_grid_pos, ship_editor.selected_tile_type )
+		
+	if( ship_editor.mouse_mode != ship_editor.MouseMode.WIRE ):
+		reset_wire_mode()
 
-func on_middle_click_motion( cursor_relative_pos ):
-		camera.set_pos(camera.get_pos()-cursor_relative_pos*camera.get_zoom())
+func on_middle_click_motion( mouse_relative_pos ):
+		camera.set_pos(camera.get_pos()-mouse_relative_pos*camera.get_zoom())
 	
 func on_wheel( button_index ):
 	if( button_index == BUTTON_WHEEL_UP ):
@@ -136,13 +232,13 @@ func on_wheel( button_index ):
 		zoom_out()
 
 func on_mouse_motion( mouse_pos ):
-	var cursor_real_pos = cursor_pos_to_real_pos( mouse_pos )
-	var cursor_grid_pos = pos_to_grid_pos(cursor_real_pos)
-	cursor.set_pos(grid_pos_to_pos(cursor_grid_pos))
+	var mouse_real_pos = mouse_pos_to_real_pos( mouse_pos )
+	var mouse_grid_pos = pos_to_grid_pos(mouse_real_pos)
+	cursor.set_pos(grid_pos_to_pos(mouse_grid_pos))
 
 
-func cursor_pos_to_real_pos( cursor_pos ):
-	return (camera.get_pos() - (OS.get_window_size()/2)*camera.get_zoom()) + cursor_pos*camera.get_zoom()
+func mouse_pos_to_real_pos( mouse_pos ):
+	return (camera.get_pos() - (OS.get_window_size()/2)*camera.get_zoom()) + mouse_pos*camera.get_zoom()
 	
 func pos_to_grid_pos( pos ):
 	return (pos / Tiles.size).floor()
