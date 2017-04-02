@@ -7,6 +7,7 @@ onready var grid_texture = get_node("parallax_bg/parallax_layer/texture_frame")
 onready var cursor = get_node("cursor")
 onready var selected_tile_wire_1 = get_node("selected_tile_wire_1")
 onready var selected_tile_wire_2 = get_node("selected_tile_wire_2")
+onready var layer_manager = get_node("../canvas_layer/ui/layer_management_panel_container")
 
 var grid_texture_virtual_size = OS.get_window_size()
 
@@ -14,8 +15,11 @@ var wheel_pressed = false
 
 var grid_data = {
 	"tiles": {},
-	"wires": {}
+	"wires": {},
+	"layers": []
 }
+var selected_layer = 0
+
 var undo_history = []
 var redo_history = []
 signal undo_history_empty()
@@ -68,7 +72,8 @@ func wire_click( grid_pos, wire_type ):
 func set_wire( p1, p2, p3, wire_type):
 	if( grid_data.tiles.has(p2) ):
 		doo()
-		grid_data.wires[p2] = {
+#		grid_data.layers
+		grid_data.layers[selected_layer].wires[p2] = {
 			"type": wire_type,
 			"pin": p1,
 			"pout": p3
@@ -79,7 +84,7 @@ func set_wire( p1, p2, p3, wire_type):
 
 func erase_wire( grid_pos ):
 	doo()
-	grid_data.wires.erase(grid_pos)
+	grid_data.layers[selected_layer].wires.erase(grid_pos)
 	update()
 
 func reset_wire_mode():
@@ -111,6 +116,7 @@ func doo():
 func undo():
 	redo_history.push_front( var2bytes(grid_data) )
 	grid_data = bytes2var( undo_history.pop_front())
+	layer_manager.load_layers(grid_data.layers)
 	if( undo_history.empty() ):
 		emit_signal("undo_history_empty")
 	emit_signal("redo_history_not_empty")
@@ -118,6 +124,7 @@ func undo():
 func redo():
 	undo_history.push_front(var2bytes(grid_data))
 	grid_data= bytes2var( redo_history.pop_front() )
+	layer_manager.load_layers(grid_data.layers)
 	if( redo_history.empty() ):
 		emit_signal("redo_history_empty")
 	emit_signal("undo_history_not_empty")
@@ -127,6 +134,7 @@ func get_grid_data():
 	return var2bytes(grid_data)
 func load_grid_data(grid_data):
 	self.grid_data = bytes2var(grid_data)
+	layer_manager.load_layers(self.grid_data.layers)
 	update()
 
 func zoom_in():
@@ -174,34 +182,50 @@ func _draw():
 		for d in global.direction_iterator:
 			if( tile.connections[0] ):
 				draw_texture( Tiles.connection_textures[d], pos )
-				
-	keys = grid_data.wires.keys()
-	key_index_range = range(keys.size())
-	for i in key_index_range:
-		var key = keys[i]
-		var wire = grid_data.wires[key]
-		var pos = grid_pos_to_pos(key)
+	
+	var layers_id_iterator = range(grid_data.layers.size())
+	for layer_id in layers_id_iterator:
+		if( layer_id != selected_layer ):
+			var layer = grid_data.layers[layer_id]
+			var wires_grid_pos = layer.wires.keys()
+			var wires_grid_pos_iterator = range(wires_grid_pos.size())
+			for wire_grid_pos_id in wires_grid_pos_iterator:
+				var wire_grid_pos = wires_grid_pos[wire_grid_pos_id]
+				var wire = layer.wires[wire_grid_pos]
+				var wire_pos = grid_pos_to_pos(wire_grid_pos)
+				if( wire.type == TilesMisc.Type.LogicWire ):
+					draw_logic_wire( wire.pin, wire_pos, wire.pout, layer.color)
+				elif( wire.type == TilesMisc.Type.EnergyWire ):
+					draw_energy_wire( wire.pin, wire_pos, wire.pout, layer.color )
+					
+	var layer = grid_data.layers[selected_layer]
+	var wires_grid_pos = layer.wires.keys()
+	var wires_grid_pos_iterator = range(wires_grid_pos.size())
+	for wire_grid_pos_id in wires_grid_pos_iterator:
+		var wire_grid_pos = wires_grid_pos[wire_grid_pos_id]
+		var wire = layer.wires[wire_grid_pos]
+		var wire_pos = grid_pos_to_pos(wire_grid_pos)
 		if( wire.type == TilesMisc.Type.LogicWire ):
-			draw_logic_wire( wire.pin, pos, wire.pout)
+			draw_logic_wire( wire.pin, wire_pos, wire.pout, layer.color)
 		elif( wire.type == TilesMisc.Type.EnergyWire ):
-			draw_energy_wire( wire.pin, pos, wire.pout )
-	
+			draw_energy_wire( wire.pin, wire_pos, wire.pout, layer.color )
 
-func draw_logic_wire( pin, pcenter, pout):
+
+func draw_logic_wire( pin, pcenter, pout, color):
 	pcenter = pcenter + TilesMisc.size/2
 	pin = pcenter + (grid_pos_to_pos(pin)+ TilesMisc.size/2 - pcenter) /2
 	pout = pcenter + (grid_pos_to_pos(pout)+ TilesMisc.size/2 - pcenter) /2
-	draw_line(pin, pcenter, Color(0,0,0),2)
-	draw_line(pcenter, pout, Color(0,0,0),2)
+	draw_line(pin, pcenter, color,2)
+	draw_line(pcenter, pout, color,2)
 	
-func draw_energy_wire( pin, pcenter, pout):
+func draw_energy_wire( pin, pcenter, pout, color):
 	pcenter = pcenter + TilesMisc.size/2
 	pin = pcenter + (grid_pos_to_pos(pin)+ TilesMisc.size/2 - pcenter) /2
 	pout = pcenter + (grid_pos_to_pos(pout)+ TilesMisc.size/2 - pcenter) /2
-	draw_line(pin, pcenter, Color(0,0,0),6)
-	draw_line(pin, pcenter, Color(255,255,255),2)
-	draw_line(pcenter, pout, Color(0,0,0),6)
-	draw_line(pcenter, pout, Color(255,255,255),2)
+	draw_line(pin, pcenter, color,5)
+	draw_line(pin, pcenter, Color(255,255,255),1)
+	draw_line(pcenter, pout, color,5)
+	draw_line(pcenter, pout, Color(255,255,255),1)
 
 
 
@@ -212,7 +236,7 @@ func on_left_click( mouse_pos ):
 	if( ship_editor.mouse_mode == ship_editor.MouseMode.TILE ):
 		set_tile(mouse_grid_pos, ship_editor.selected_tile_type)
 	elif( ship_editor.mouse_mode == ship_editor.MouseMode.ERASER ):
-		if( grid_data.wires.has(mouse_grid_pos) ):
+		if( grid_data.layers[selected_layer].wires.has(mouse_grid_pos) ):
 			erase_wire( mouse_grid_pos )
 		else:
 			erase_tile( mouse_grid_pos )
@@ -245,5 +269,32 @@ func pos_to_grid_pos( pos ):
 
 func grid_pos_to_pos( grid_pos ):
 	return grid_pos*Tiles.size
+
+
+
+
+
+
+
+# layer manager signals handling
+func _on_layer_management_panel_container_default_layer_added( layer_id, layer_name, layer_color ):
+	grid_data.layers.append( {"name": layer_name,"color": layer_color,"wires":{}})
+func _on_layer_management_panel_container_layer_added( layer_id, layer_name, layer_color ):
+	doo()
+	grid_data.layers.append( {"name": layer_name,"color": layer_color,"wires":{}})
+func _on_layer_management_panel_container_layer_deleted( layer_id ):
+	if( grid_data.layers.size()>layer_id ):
+		doo()
+		grid_data.layers.remove(layer_id)
+func _on_layer_management_panel_container_layer_name_changed( layer_id, layer_name ):
+	doo()
+	grid_data.layers[layer_id].name = layer_name
+func _on_layer_management_panel_container_layer_color_changed( layer_id, layer_color ):
+	doo()
+	grid_data.layers[layer_id].color = layer_color
+	update()
+func _on_layer_management_panel_container_layer_selected( layer_id ):
+	selected_layer = layer_id
+	update()
 
 

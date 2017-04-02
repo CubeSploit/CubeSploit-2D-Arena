@@ -9,6 +9,7 @@ onready var select_button = get_node("canvas_layer/ui/editor_command_panel_conta
 onready var erase_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/erase_button")
 onready var undo_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/undo_button")
 onready var redo_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/redo_button")
+onready var layer_manager = get_node("canvas_layer/ui/layer_management_panel_container")
 
 onready var save_file_dialog = get_node("canvas_layer/ui/editor_command_panel_container/save_file_dialog")
 onready var load_file_dialog = get_node("canvas_layer/ui/editor_command_panel_container/load_file_dialog")
@@ -102,9 +103,11 @@ func _on_redo_button_pressed():
 func _on_grid_undo_history_empty():
 	undo_button.set_disabled(true)
 func _on_grid_undo_history_not_empty():
-	undo_button.set_disabled(false)
+	if( undo_button != null ):
+		undo_button.set_disabled(false)
 func _on_grid_redo_history_empty():
-	redo_button.set_disabled(true)
+	if( redo_button != null ):
+		redo_button.set_disabled(true)
 func _on_grid_redo_history_not_empty():
 	redo_button.set_disabled(false)
 
@@ -144,11 +147,3 @@ func _on_reset_zoom_button_pressed():
 
 func _on_exit_button_pressed():
 	get_tree().change_scene_to(global.Scenes.MAIN)
-
-
-
-
-
-
-
-
