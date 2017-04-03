@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=1]
+[gd_scene load_steps=4 format=1]
 
 [ext_resource path="res://ui/editable_button_with_color_picker.gd" type="Script" id=1]
+[ext_resource path="res://icons/sight.png" type="Texture" id=2]
+[ext_resource path="res://icons/sight-disabled.png" type="Texture" id=3]
 
 [node name="editable_button_with_color_picker" type="Control"]
 
@@ -11,7 +13,7 @@ size_flags/horizontal = 3
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 100.0
+margin/right = 130.0
 margin/bottom = 25.0
 script/script = ExtResource( 1 )
 
@@ -25,12 +27,71 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 20.0
+margin/right = 50.0
 margin/bottom = 0.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
 text = "Default"
+flat = false
+
+[node name="line_edit" type="LineEdit" parent="."]
+
+visibility/visible = false
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 50.0
+margin/bottom = 0.0
+placeholder/alpha = 0.6
+align = 1
+expand_to_len = false
+focus_mode = 2
+caret/caret_blink = false
+caret/caret_blink_speed = 0.65
+
+[node name="disable_sight_button" type="Button" parent="."]
+
+anchor/left = 1
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 50.0
+margin/top = 0.0
+margin/right = 20.0
+margin/bottom = 0.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+icon = ExtResource( 2 )
+flat = false
+
+[node name="enable_sight_button" type="Button" parent="."]
+
+visibility/visible = false
+anchor/left = 1
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 50.0
+margin/top = 0.0
+margin/right = 20.0
+margin/bottom = 0.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+icon = ExtResource( 3 )
 flat = false
 
 [node name="color_picker_button" type="ColorPickerButton" parent="."]
@@ -53,30 +114,14 @@ flat = false
 color = Color( 1, 1, 1, 1 )
 edit_alpha = false
 
-[node name="line_edit" type="LineEdit" parent="."]
-
-visibility/visible = false
-anchor/right = 1
-anchor/bottom = 1
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 20.0
-margin/bottom = 0.0
-placeholder/alpha = 0.6
-align = 1
-expand_to_len = false
-focus_mode = 2
-caret/caret_blink = false
-caret/caret_blink_speed = 0.65
-
 [connection signal="pressed" from="button" to="." method="_on_button_pressed"]
 
 [connection signal="focus_exit" from="line_edit" to="." method="_on_line_edit_focus_exit"]
 
 [connection signal="text_entered" from="line_edit" to="." method="_on_line_edit_text_entered"]
+
+[connection signal="pressed" from="disable_sight_button" to="." method="_on_disable_sight_button_pressed"]
+
+[connection signal="pressed" from="enable_sight_button" to="." method="_on_enable_sight_button_pressed"]
 
 

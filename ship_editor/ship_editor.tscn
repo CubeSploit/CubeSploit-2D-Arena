@@ -488,7 +488,7 @@ show_hidden_files = true
 [node name="layer_management_panel_container" parent="canvas_layer/ui" instance=ExtResource( 17 )]
 
 margin/left = 150.0
-margin/right = 275.0
+margin/right = 300.0
 
 [connection signal="redo_history_empty" from="grid" to="." method="_on_grid_redo_history_empty"]
 
@@ -537,5 +537,9 @@ margin/right = 275.0
 [connection signal="layer_name_changed" from="canvas_layer/ui/layer_management_panel_container" to="grid" method="_on_layer_management_panel_container_layer_name_changed"]
 
 [connection signal="layer_selected" from="canvas_layer/ui/layer_management_panel_container" to="grid" method="_on_layer_management_panel_container_layer_selected"]
+
+[connection signal="layer_sight_disabled" from="canvas_layer/ui/layer_management_panel_container" to="grid" method="_on_layer_management_panel_container_layer_sight_disabled"]
+
+[connection signal="layer_sight_enabled" from="canvas_layer/ui/layer_management_panel_container" to="grid" method="_on_layer_management_panel_container_layer_sight_enabled"]
 
 

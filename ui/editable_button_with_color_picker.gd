@@ -3,11 +3,17 @@ extends Control
 onready var button = get_node("button")
 onready var line_edit = get_node("line_edit")
 onready var color_picker_button = get_node("color_picker_button")
+onready var disable_sight_button = get_node("disable_sight_button")
+onready var enable_sight_button = get_node("enable_sight_button")
+
+
 var selected = false
 
 signal selected()
 signal name_changed(name)
 signal color_changed(color)
+signal disabled_sight()
+signal enabled_sight()
 
 var name = "Default"
 var color = Color(255,255,255)
@@ -69,3 +75,11 @@ func _on_line_edit_focus_exit():
 
 
 
+func _on_disable_sight_button_pressed():
+	emit_signal("disabled_sight")
+	disable_sight_button.hide()
+	enable_sight_button.show()
+func _on_enable_sight_button_pressed():
+	emit_signal("enabled_sight")
+	disable_sight_button.show()
+	enable_sight_button.hide()

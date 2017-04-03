@@ -11,6 +11,8 @@ signal default_layer_added(layer_id, layer_name, layer_color)
 signal layer_deleted(layer_id)
 signal layer_name_changed(layer_id, layer_name)
 signal layer_color_changed(layer_id, layer_color)
+signal layer_sight_disabled(layer_id)
+signal layer_sight_enabled(layer_id)
 
 func _ready():
 	var layer = add_layer("Default", null)
@@ -38,6 +40,8 @@ func add_layer(name = null, color = null):
 	layer.connect("selected",self,"on_layer_select", [layer])
 	layer.connect("name_changed",self,"on_layer_name_change", [layer])
 	layer.connect("color_changed",self,"on_layer_color_change", [layer])
+	layer.connect("disabled_sight",self,"on_layer_disable_sight", [layer])
+	layer.connect("enabled_sight",self,"on_layer_enable_sight", [layer])
 	
 	layer_container.add_child(layer)
 	
@@ -59,6 +63,13 @@ func on_layer_name_change(name, layer):
 func on_layer_color_change(color, layer):
 	var layer_id = layers.find(layer)
 	emit_signal("layer_color_changed", layer_id, color)
+
+func on_layer_disable_sight(layer):
+	var layer_id = layers.find(layer)
+	emit_signal("layer_sight_disabled", layer_id)
+func on_layer_enable_sight(layer):
+	var layer_id = layers.find(layer)
+	emit_signal("layer_sight_enabled", layer_id)
 
 
 func _on_new_layer_button_pressed():
