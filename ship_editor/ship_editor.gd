@@ -9,7 +9,7 @@ onready var select_button = get_node("canvas_layer/ui/editor_command_panel_conta
 onready var erase_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/erase_button")
 onready var undo_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/undo_button")
 onready var redo_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/redo_button")
-onready var layer_manager = get_node("canvas_layer/ui/layer_management_panel_container")
+onready var layer_manager = get_node("canvas_layer/ui/layer_manager")
 
 onready var save_file_dialog = get_node("canvas_layer/ui/editor_command_panel_container/save_file_dialog")
 onready var load_file_dialog = get_node("canvas_layer/ui/editor_command_panel_container/load_file_dialog")

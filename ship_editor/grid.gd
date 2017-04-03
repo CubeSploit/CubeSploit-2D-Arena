@@ -1,13 +1,13 @@
 extends Node2D
 
 onready var ship_editor = get_parent()
-onready var camera = ship_editor.get_node("camera_2d")
+onready var camera = get_node("../camera_2d")
 onready var grid_layer = get_node("parallax_bg/parallax_layer")
 onready var grid_texture = get_node("parallax_bg/parallax_layer/texture_frame")
 onready var cursor = get_node("cursor")
 onready var selected_tile_wire_1 = get_node("selected_tile_wire_1")
 onready var selected_tile_wire_2 = get_node("selected_tile_wire_2")
-onready var layer_manager = get_node("../canvas_layer/ui/layer_management_panel_container")
+onready var layer_manager = get_node("../canvas_layer/ui/layer_manager")
 
 var grid_texture_virtual_size = OS.get_window_size()
 
@@ -71,7 +71,7 @@ func wire_click( grid_pos, wire_type ):
 		wire_click_first = grid_pos
 		wire_click_second = null
 
-	update_wire_mode_render()
+	update_wire_mode_selected_tiles_cursor()
 
 func set_wire( p1, p2, p3, wire_type):
 	if( grid_data.tiles.has(p2) ):
@@ -98,9 +98,9 @@ func reset_wire_mode():
 	wire_click_second = null
 	selected_tile_wire_1.hide()
 	selected_tile_wire_2.hide()
-	update_wire_mode_render()
+	update_wire_mode_selected_tiles_cursor()
 	
-func update_wire_mode_render():
+func update_wire_mode_selected_tiles_cursor():
 	if( wire_click_first != null ):
 		selected_tile_wire_1.show()
 		selected_tile_wire_1.set_pos( grid_pos_to_pos( wire_click_first ))

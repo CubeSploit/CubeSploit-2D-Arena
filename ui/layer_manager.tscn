@@ -4,7 +4,7 @@
 [ext_resource path="res://icons/stack.png" type="Texture" id=2]
 [ext_resource path="res://icons/trash-can.png" type="Texture" id=3]
 
-[node name="layer_management_panel_container" type="Control"]
+[node name="layer_manager" type="Control"]
 
 focus/ignore_mouse = false
 focus/stop_mouse = true
@@ -149,7 +149,7 @@ size_flags/vertical = 3
 margin/left = 0.0
 margin/top = 0.0
 margin/right = 111.0
-margin/bottom = 25.0
+margin/bottom = 0.0
 alignment = 0
 
 [connection signal="pressed" from="button_panel_container/h_box_container/new_layer_button" to="." method="_on_new_layer_button_pressed"]
