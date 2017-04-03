@@ -25,6 +25,7 @@ const MouseMode = {
 
 var selected_tile_type = 0
 var mouse_mode = MouseMode.SELECTION
+var left_click_pressed = false
 var wheel_pressed = false
 
 var file_path = null
@@ -35,17 +36,27 @@ func _ready():
 	
 
 func _unhandled_input(ev):
-	# left click
+	# left click press
 	if( ev.type == InputEvent.MOUSE_BUTTON && ev.button_index == BUTTON_LEFT && ev.pressed):
 		grid.on_left_click(ev.pos)
 	
-	# middle click
+	# left click press/release
+	if( ev.type == InputEvent.MOUSE_BUTTON && ev.button_index == BUTTON_LEFT ):
+		left_click_pressed = ev.pressed
+		if( !ev.pressed ):
+			grid.on_left_click_release()
+	# mouse motion while holding left click down
+	if( ev.type == InputEvent.MOUSE_MOTION && left_click_pressed ):
+		grid.on_left_click_motion( ev.pos )
+		
+	# middle click press/release
 	if( ev.type == InputEvent.MOUSE_BUTTON && ev.button_index == BUTTON_MIDDLE ):
 		wheel_pressed = ev.pressed
-	
 	# mouse motion while holding middle click down
 	if( ev.type == InputEvent.MOUSE_MOTION && wheel_pressed ):
 		grid.on_middle_click_motion( ev.relative_pos )
+		
+
 	
 	# wheel
 	if( ev.type == InputEvent.MOUSE_BUTTON && 

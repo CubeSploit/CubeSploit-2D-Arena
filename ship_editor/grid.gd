@@ -11,6 +11,8 @@ onready var layer_manager = get_node("../canvas_layer/ui/layer_management_panel_
 
 var grid_texture_virtual_size = OS.get_window_size()
 
+var left_click_last_mouse_pos
+var left_click_drag_mode = false
 var wheel_pressed = false
 
 var grid_data = {
@@ -34,14 +36,16 @@ func _ready():
 
 
 func set_tile( grid_pos, tile_type ):
-	doo()
+	if( !left_click_drag_mode ):
+		doo()
 	grid_data.tiles[grid_pos] = {
 		"type": tile_type,
 		"connections": [true,true,true,true]
 	}
 	update()
 func erase_tile( grid_pos ):
-	doo()
+	if( !left_click_drag_mode ):
+		doo()
 	grid_data.tiles.erase(grid_pos)
 	update()
 
@@ -71,7 +75,8 @@ func wire_click( grid_pos, wire_type ):
 
 func set_wire( p1, p2, p3, wire_type):
 	if( grid_data.tiles.has(p2) ):
-		doo()
+		if( !left_click_drag_mode ):
+			doo()
 #		grid_data.layers
 		grid_data.layers[selected_layer].wires[p2] = {
 			"type": wire_type,
@@ -83,7 +88,8 @@ func set_wire( p1, p2, p3, wire_type):
 		reset_wire_mode()
 
 func erase_wire( layer_id, grid_pos ):
-	doo()
+	if( !left_click_drag_mode ):
+		doo()
 	grid_data.layers[layer_id].wires.erase(grid_pos)
 	update()
 
@@ -248,6 +254,19 @@ func on_left_click( mouse_pos ):
 		
 	if( ship_editor.mouse_mode != ship_editor.MouseMode.WIRE ):
 		reset_wire_mode()
+		
+	left_click_last_mouse_pos = mouse_pos
+func on_left_click_motion( mouse_pos ):
+	left_click_drag_mode = true
+	var last_mouse_grid_pos = pos_to_grid_pos( left_click_last_mouse_pos )
+	var new_mouse_grid_pos = pos_to_grid_pos( mouse_pos )
+
+	if( last_mouse_grid_pos != new_mouse_grid_pos ):
+		on_left_click( mouse_pos )
+		
+	left_click_last_mouse_pos = mouse_pos
+func on_left_click_release( ):
+	left_click_drag_mode = false
 
 func get_layer_id_containing_wire( grid_pos ):
 	if( grid_data.layers[selected_layer].wires.has(grid_pos) ):
