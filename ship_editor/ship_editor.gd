@@ -1,7 +1,8 @@
 extends Node2D
 
 onready var camera = get_node('camera_2d')
-onready var grid = get_node("grid")
+onready var grid = get_node('grid')
+onready var grid_data_manager = get_node("grid_data_manager")
 
 onready var tile_list = get_node("canvas_layer/ui/tab_container/Tiles")
 onready var misc_tile_list = get_node("canvas_layer/ui/tab_container/Misc")
@@ -107,41 +108,32 @@ func _on_erase_button_pressed():
 
 	
 func _on_undo_button_pressed():
-	grid.undo()
+	grid_data_manager.undo()
 func _on_redo_button_pressed():
-	grid.redo()
+	grid_data_manager.redo()
 
-func _on_grid_undo_history_empty():
-	undo_button.set_disabled(true)
-func _on_grid_undo_history_not_empty():
-	if( undo_button != null ):
-		undo_button.set_disabled(false)
-func _on_grid_redo_history_empty():
+func _on_grid_data_manager_redo_history_empty():
 	if( redo_button != null ):
 		redo_button.set_disabled(true)
-func _on_grid_redo_history_not_empty():
+func _on_grid_data_manager_redo_history_not_empty():
 	redo_button.set_disabled(false)
-
+func _on_grid_data_manager_undo_history_empty():
+	undo_button.set_disabled(true)
+func _on_grid_data_manager_undo_history_not_empty():
+	if( undo_button != null ):
+		undo_button.set_disabled(false)
 
 
 
 func _on_save_button_pressed():
 	save_file_dialog.popup_centered()
 func _on_file_dialog_file_selected( path ):
-	var content = grid.get_grid_data()
-	var file = File.new()
-	file.open(path, file.WRITE)
-	file.store_var(content)
-	file.close()
+	grid_data_manager.save_grid_data(path)
 	file_path = path
 func _on_load_button_pressed():
 	load_file_dialog.popup_centered()
 func _on_load_file_dialog_file_selected( path ):
-	var file = File.new()
-	file.open(path, file.READ)
-	var content = file.get_var()
-	file.close()
-	grid.load_grid_data(content)
+	grid_data_manager.load_grid_data(path)
 	file_path = path
 
 

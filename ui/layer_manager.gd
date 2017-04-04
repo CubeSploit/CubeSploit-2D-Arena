@@ -23,7 +23,7 @@ func load_layers( layers ):
 	while( self.layers.size() != 0 ):
 		delete_layer(0)
 	for i in range(layers.size()):
-		add_layer(layers[i].name, layers[i].color)
+		add_layer(layers[i].get_name(), layers[i].get_color())
 
 func add_layer(name = null, color = null):
 	var layer = layer_button_scene.instance()

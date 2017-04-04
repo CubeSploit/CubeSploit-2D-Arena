@@ -495,13 +495,13 @@ show_hidden_files = true
 margin/left = 150.0
 margin/right = 300.0
 
-[connection signal="redo_history_empty" from="grid" to="." method="_on_grid_redo_history_empty"]
+[connection signal="redo_history_empty" from="grid_data_manager" to="." method="_on_grid_data_manager_redo_history_empty"]
 
-[connection signal="redo_history_not_empty" from="grid" to="." method="_on_grid_redo_history_not_empty"]
+[connection signal="redo_history_not_empty" from="grid_data_manager" to="." method="_on_grid_data_manager_redo_history_not_empty"]
 
-[connection signal="undo_history_empty" from="grid" to="." method="_on_grid_undo_history_empty"]
+[connection signal="undo_history_empty" from="grid_data_manager" to="." method="_on_grid_data_manager_undo_history_empty"]
 
-[connection signal="undo_history_not_empty" from="grid" to="." method="_on_grid_undo_history_not_empty"]
+[connection signal="undo_history_not_empty" from="grid_data_manager" to="." method="_on_grid_data_manager_undo_history_not_empty"]
 
 [connection signal="item_selected" from="canvas_layer/ui/tab_container/Tiles" to="." method="_on_Tiles_item_selected"]
 
@@ -533,32 +533,18 @@ margin/right = 300.0
 
 [connection signal="default_layer_added" from="canvas_layer/ui/layer_manager" to="grid_data_manager" method="_on_layer_manager_default_layer_added"]
 
-[connection signal="default_layer_added" from="canvas_layer/ui/layer_manager" to="grid" method="_on_layer_management_panel_container_default_layer_added"]
-
 [connection signal="layer_added" from="canvas_layer/ui/layer_manager" to="grid_data_manager" method="_on_layer_manager_layer_added"]
-
-[connection signal="layer_added" from="canvas_layer/ui/layer_manager" to="grid" method="_on_layer_management_panel_container_layer_added"]
 
 [connection signal="layer_color_changed" from="canvas_layer/ui/layer_manager" to="grid_data_manager" method="_on_layer_manager_layer_color_changed"]
 
-[connection signal="layer_color_changed" from="canvas_layer/ui/layer_manager" to="grid" method="_on_layer_management_panel_container_layer_color_changed"]
-
 [connection signal="layer_deleted" from="canvas_layer/ui/layer_manager" to="grid_data_manager" method="_on_layer_manager_layer_deleted"]
-
-[connection signal="layer_deleted" from="canvas_layer/ui/layer_manager" to="grid" method="_on_layer_management_panel_container_layer_deleted"]
 
 [connection signal="layer_name_changed" from="canvas_layer/ui/layer_manager" to="grid_data_manager" method="_on_layer_manager_layer_name_changed"]
 
-[connection signal="layer_name_changed" from="canvas_layer/ui/layer_manager" to="grid" method="_on_layer_management_panel_container_layer_name_changed"]
-
-[connection signal="layer_selected" from="canvas_layer/ui/layer_manager" to="grid" method="_on_layer_management_panel_container_layer_selected"]
+[connection signal="layer_selected" from="canvas_layer/ui/layer_manager" to="grid_data_manager" method="_on_layer_manager_layer_selected"]
 
 [connection signal="layer_sight_disabled" from="canvas_layer/ui/layer_manager" to="grid_data_manager" method="_on_layer_manager_layer_sight_disabled"]
 
-[connection signal="layer_sight_disabled" from="canvas_layer/ui/layer_manager" to="grid" method="_on_layer_management_panel_container_layer_sight_disabled"]
-
 [connection signal="layer_sight_enabled" from="canvas_layer/ui/layer_manager" to="grid_data_manager" method="_on_layer_manager_layer_sight_enabled"]
-
-[connection signal="layer_sight_enabled" from="canvas_layer/ui/layer_manager" to="grid" method="_on_layer_management_panel_container_layer_sight_enabled"]
 
 

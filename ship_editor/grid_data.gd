@@ -7,15 +7,59 @@ var selected_layer_id
 func _init():
 	pass
 
+func to_dict():
+	var dict = inst2dict(self)
+	
+	dict.tiles = {}
+	var tiles_grid_pos = tiles.keys()
+	var tiles_grid_pos_id_iterator = range(tiles_grid_pos.size())
+	for i in tiles_grid_pos_id_iterator:
+		dict.tiles[tiles_grid_pos[i]] = inst2dict(tiles[tiles_grid_pos[i]])
+		var dict = inst2dict(tiles[tiles_grid_pos[i]])
+		print(var2str(dict))
+#		print(dict2inst(dict))  # bug???
+		var p = {
+			"@path":"res://ship_editor/grid_data.gd",
+			"@subpath":"Tile",
+			"background":false, 
+			"connections":[true, true, true, true],
+			"type": 1
+		}
+		print(dict2inst(p))
+	
+	dict.layers = []
+	var layers_id_iterator = range(layers.size())
+	for layer_id in layers_id_iterator:
+		dict.layers.append( layers[layer_id].to_dict() )
+	
+
+	return dict
+
+func from_dict():
+	var tiles_grid_pos = tiles.keys()
+	var tiles_grid_pos_id_iterator = range(tiles_grid_pos.size())
+	for i in tiles_grid_pos_id_iterator:
+		tiles[tiles_grid_pos[i]] = dict2inst(tiles[tiles_grid_pos[i]])
+
+	var layers_id_iterator = range(layers.size())
+	for layer_id in layers_id_iterator:
+		layers[layer_id] = dict2inst(layers[layer_id])
+		layers[layer_id].from_dict()
+
 func set_tiles(tiles):
 	self.tiles = tiles
 func get_tiles():
 	return tiles
-func remove_tile(grid_pos):
-	tiles[grid_pos].erase(grid_pos)
 func set_tile(grid_pos, tile):
 	tiles[grid_pos] = tile
-	
+func get_tile(grid_pos):
+	return tiles[grid_pos]
+func has_tile(grid_pos):
+	return tiles.has(grid_pos)
+func remove_tile(grid_pos):
+	tiles[grid_pos].erase(grid_pos)
+
+
 func set_layers(layers):
 	self.layers = layers
 func get_layers():
@@ -46,6 +90,7 @@ class Tile:
 	
 	func _init(type):
 		self.type = type
+
 	
 	func set_type(type):
 		self.type = type
@@ -75,6 +120,23 @@ class Layer:
 	func _init(name = "Default", color = Color(255,255,255)):
 		self.name = name
 		self.color = color
+		
+	func to_dict():
+		var dict = inst2dict(self)
+		
+		dict.wires = {}
+		var wires_grid_pos = wires.keys()
+		var wires_grid_pos_id_iterator = range(wires_grid_pos.size())
+		for i in wires_grid_pos_id_iterator:
+			dict.wires[wires_grid_pos[i]] = inst2dict(wires[wires_grid_pos[i]])
+		
+		return dict
+	func from_dict():
+		var wires_grid_pos = wires.keys()
+		var wires_grid_pos_id_iterator = range(wires_grid_pos.size())
+		for i in wires_grid_pos_id_iterator:
+			wires[wires_grid_pos[i]] = dict2inst(wires[wires_grid_pos[i]])
+		
 		
 	func set_name(name):
 		self.name = name
@@ -112,4 +174,18 @@ class Wire:
 		self.pin = pin
 		self.pout = pout
 
+	func set_type(type):
+		self.type = type
+	func get_type():
+		return type
+		
+	func set_pin(pin):
+		self.pin = pin
+	func get_pin():
+		return pin
+		
+	func set_pout(pout):
+		self.pout = pout
+	func get_pout():
+		return pout
 
