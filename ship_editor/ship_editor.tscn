@@ -1,23 +1,28 @@
-[gd_scene load_steps=19 format=1]
+[gd_scene load_steps=21 format=1]
 
 [ext_resource path="res://ship_editor/ship_editor.gd" type="Script" id=1]
-[ext_resource path="res://ship_editor/grid_data_manager.gd" type="Script" id=2]
-[ext_resource path="res://ship_editor/grid.gd" type="Script" id=3]
-[ext_resource path="res://ship_editor/selected_tile.png" type="Texture" id=4]
-[ext_resource path="res://ship_editor/cursor.png" type="Texture" id=5]
-[ext_resource path="res://ship_editor/grid.png" type="Texture" id=6]
-[ext_resource path="res://ui/item_list.tscn" type="PackedScene" id=7]
-[ext_resource path="res://icons/arrow-cursor.png" type="Texture" id=8]
-[ext_resource path="res://icons/trash-can.png" type="Texture" id=9]
-[ext_resource path="res://icons/anticlockwise-rotation.png" type="Texture" id=10]
-[ext_resource path="res://icons/clockwise-rotation.png" type="Texture" id=11]
-[ext_resource path="res://icons/contract.png" type="Texture" id=12]
-[ext_resource path="res://icons/expand.png" type="Texture" id=13]
-[ext_resource path="res://icons/cancel.png" type="Texture" id=14]
-[ext_resource path="res://icons/save.png" type="Texture" id=15]
-[ext_resource path="res://icons/load.png" type="Texture" id=16]
-[ext_resource path="res://icons/exit-door.png" type="Texture" id=17]
-[ext_resource path="res://ui/layer_manager.tscn" type="PackedScene" id=18]
+[ext_resource path="res://ship_editor/camera_2d.gd" type="Script" id=2]
+[ext_resource path="res://ship_editor/grid_data_manager.gd" type="Script" id=3]
+[ext_resource path="res://ship_editor/grid.gd" type="Script" id=4]
+[ext_resource path="res://ship_editor/selected_tile.png" type="Texture" id=5]
+[ext_resource path="res://ship_editor/cursor.png" type="Texture" id=6]
+[ext_resource path="res://ship_editor/grid.png" type="Texture" id=7]
+[ext_resource path="res://ui/item_list.tscn" type="PackedScene" id=8]
+[ext_resource path="res://icons/arrow-cursor.png" type="Texture" id=9]
+[ext_resource path="res://icons/trash-can.png" type="Texture" id=10]
+[ext_resource path="res://icons/anticlockwise-rotation.png" type="Texture" id=11]
+[ext_resource path="res://icons/clockwise-rotation.png" type="Texture" id=12]
+[ext_resource path="res://icons/contract.png" type="Texture" id=13]
+[ext_resource path="res://icons/expand.png" type="Texture" id=14]
+[ext_resource path="res://icons/cancel.png" type="Texture" id=15]
+[ext_resource path="res://icons/save.png" type="Texture" id=16]
+[ext_resource path="res://icons/load.png" type="Texture" id=17]
+[ext_resource path="res://icons/exit-door.png" type="Texture" id=18]
+[ext_resource path="res://ui/layer_manager.tscn" type="PackedScene" id=19]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends Node2D\n\nonready var camera = get_node(\"../camera_2d\")\nonready var grid = get_node(\"../grid\")\n\nfunc zoom_in():\n\tzoom(\"in\")\nfunc zoom_out():\n\tzoom(\"out\")\nfunc zoom_reset():\n\tzoom(\"reset\")\nfunc zoom(zoom_where):\n\tvar new_size\n\tvar new_zoom\n\t\n\tif( zoom_where == \"reset\" ):\n\t\tnew_size = OS.get_window_size()\n\t\tnew_zoom = Vector2(1,1)\n\t\tcamera.set_pos(Vector2(0,0))\n\telse:\n\t\tvar tiles_screen_dim = OS.get_window_size()/Tiles.size/10\n\t\tvar added_size = Tiles.size * tiles_screen_dim\n\t\tif( zoom_where == \"in\" ):\n\t\t\tadded_size *= -1\n\t\tnew_size = grid.grid_texture_virtual_size+added_size\n\t\tnew_zoom = new_size/OS.get_window_size()\n\n\tif( new_zoom.x < 0.3 || new_zoom.y < 0.3):\n\t\treturn\n\t\n\tcamera.set_zoom( new_zoom )\n\tgrid.grid_layer.set_motion_scale(new_zoom)\n\t# texture size should be changed only on zoom superior to 1, else it is buggy\n\t# dunno why...\n\tif( new_zoom.x >= 1 || new_zoom.y >= 1 ):\n\t\tgrid.grid_texture.set_size(new_size)\n\tgrid.grid_texture_virtual_size = new_size"
 
 [node name="ship_editor" type="Node2D"]
 
@@ -43,30 +48,36 @@ drag_margin/left = 0.2
 drag_margin/top = 0.21
 drag_margin/right = 0.2
 drag_margin/bottom = 0.2
+script/script = ExtResource( 2 )
+
+[node name="zoom_manager" type="Node2D" parent="."]
+
+script/script = SubResource( 1 )
 
 [node name="grid_data_manager" type="Node2D" parent="."]
 
-script/script = ExtResource( 2 )
+script/script = ExtResource( 3 )
 
 [node name="grid" type="Node2D" parent="."]
 
-script/script = ExtResource( 3 )
+editor/display_folded = true
+script/script = ExtResource( 4 )
 
 [node name="selected_tile_wire_1" type="Sprite" parent="grid"]
 
 visibility/visible = false
-texture = ExtResource( 4 )
+texture = ExtResource( 5 )
 offset = Vector2( 10, 10 )
 
 [node name="selected_tile_wire_2" type="Sprite" parent="grid"]
 
 visibility/visible = false
-texture = ExtResource( 4 )
+texture = ExtResource( 5 )
 offset = Vector2( 10, 10 )
 
 [node name="cursor" type="Sprite" parent="grid"]
 
-texture = ExtResource( 5 )
+texture = ExtResource( 6 )
 offset = Vector2( 10, 10 )
 
 [node name="parallax_bg" type="ParallaxBackground" parent="grid"]
@@ -98,11 +109,12 @@ margin/left = -1.0
 margin/top = 0.0
 margin/right = 999.0
 margin/bottom = 600.0
-texture = ExtResource( 6 )
+texture = ExtResource( 7 )
 stretch_mode = 2
 
 [node name="canvas_layer" type="CanvasLayer" parent="."]
 
+editor/display_folded = true
 layer = 1
 offset = Vector2( 0, 0 )
 rotation = 0.0
@@ -133,7 +145,7 @@ margin/bottom = 600.0
 tab_align = 0
 tabs_visible = true
 
-[node name="Tiles" parent="canvas_layer/ui/tab_container" instance=ExtResource( 7 )]
+[node name="Tiles" parent="canvas_layer/ui/tab_container" instance=ExtResource( 8 )]
 
 anchor/right = 1
 anchor/bottom = 1
@@ -144,7 +156,7 @@ margin/bottom = 4.0
 list_node_path = "/root/Tiles"
 list_name = "Data"
 
-[node name="Misc" parent="canvas_layer/ui/tab_container" instance=ExtResource( 7 )]
+[node name="Misc" parent="canvas_layer/ui/tab_container" instance=ExtResource( 8 )]
 
 visibility/visible = false
 anchor/right = 1
@@ -205,7 +217,7 @@ margin/bottom = 38.0
 toggle_mode = true
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 8 )
+icon = ExtResource( 9 )
 flat = false
 
 [node name="erase_button" type="Button" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -221,7 +233,7 @@ margin/bottom = 38.0
 toggle_mode = true
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 9 )
+icon = ExtResource( 10 )
 flat = false
 
 [node name="v_separator_7" type="VSeparator" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -260,7 +272,7 @@ disabled = true
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 10 )
+icon = ExtResource( 11 )
 flat = false
 
 [node name="redo_button" type="Button" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -277,7 +289,7 @@ disabled = true
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 11 )
+icon = ExtResource( 12 )
 flat = false
 
 [node name="v_separator_1" type="VSeparator" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -315,7 +327,7 @@ margin/bottom = 38.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 12 )
+icon = ExtResource( 13 )
 flat = false
 
 [node name="zoom_out_button" type="Button" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -331,7 +343,7 @@ margin/bottom = 38.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 13 )
+icon = ExtResource( 14 )
 flat = false
 
 [node name="reset_zoom_button" type="Button" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -347,7 +359,7 @@ margin/bottom = 38.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 14 )
+icon = ExtResource( 15 )
 flat = false
 
 [node name="v_separator_3" type="VSeparator" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -385,7 +397,7 @@ margin/bottom = 38.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 15 )
+icon = ExtResource( 16 )
 flat = false
 
 [node name="load_button" type="Button" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -401,7 +413,7 @@ margin/bottom = 38.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 16 )
+icon = ExtResource( 17 )
 flat = false
 
 [node name="v_separator_6" type="VSeparator" parent="canvas_layer/ui/editor_command_panel_container/h_box_container"]
@@ -439,7 +451,7 @@ margin/bottom = 38.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-icon = ExtResource( 17 )
+icon = ExtResource( 18 )
 flat = false
 
 [node name="save_file_dialog" type="FileDialog" parent="canvas_layer/ui/editor_command_panel_container"]
@@ -490,7 +502,7 @@ access = 1
 filters = StringArray(  )
 show_hidden_files = true
 
-[node name="layer_manager" parent="canvas_layer/ui" instance=ExtResource( 18 )]
+[node name="layer_manager" parent="canvas_layer/ui" instance=ExtResource( 19 )]
 
 margin/left = 150.0
 margin/right = 300.0

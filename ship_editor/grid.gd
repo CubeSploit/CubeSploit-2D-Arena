@@ -2,13 +2,14 @@ extends Node2D
 
 onready var ship_editor = get_parent()
 onready var camera = get_node("../camera_2d")
+onready var grid_data_manager = get_node("../grid_data_manager")
+
 onready var grid_layer = get_node("parallax_bg/parallax_layer")
 onready var grid_texture = get_node("parallax_bg/parallax_layer/texture_frame")
 onready var cursor = get_node("cursor")
 onready var selected_tile_wire_1 = get_node("selected_tile_wire_1")
 onready var selected_tile_wire_2 = get_node("selected_tile_wire_2")
-onready var layer_manager = get_node("../canvas_layer/ui/layer_manager")
-onready var grid_data_manager = get_node("../grid_data_manager")
+
 var grid_texture_virtual_size = OS.get_window_size()
 
 var left_click_last_mouse_pos
@@ -73,38 +74,6 @@ func update_wire_mode_selected_tiles_cursor():
 
 
 
-func zoom_in():
-	zoom("in")
-func zoom_out():
-	zoom("out")
-func zoom_reset():
-	zoom("reset")
-func zoom(zoom_where):
-	var new_size
-	var new_zoom
-	
-	if( zoom_where == "reset" ):
-		new_size = OS.get_window_size()
-		new_zoom = Vector2(1,1)
-		camera.set_pos(Vector2(0,0))
-	else:
-		var tiles_screen_dim = OS.get_window_size()/Tiles.size/10
-		var added_size = Tiles.size * tiles_screen_dim
-		if( zoom_where == "in" ):
-			added_size *= -1
-		new_size = grid_texture_virtual_size+added_size
-		new_zoom = new_size/OS.get_window_size()
-
-	if( new_zoom.x < 0.3 || new_zoom.y < 0.3):
-		return
-	
-	camera.set_zoom( new_zoom )
-	grid_layer.set_motion_scale(new_zoom)
-	# texture size should be changed only on zoom superior to 1, else it is buggy
-	# dunno why...
-	if( new_zoom.x >= 1 || new_zoom.y >= 1 ):
-		grid_texture.set_size(new_size)
-	grid_texture_virtual_size = new_size
 
 	
 func _draw():
@@ -200,14 +169,7 @@ func on_left_click_motion( mouse_pos ):
 func on_left_click_release( ):
 	left_click_drag_mode = false
 
-func on_middle_click_motion( mouse_relative_pos ):
-		camera.set_pos(camera.get_pos()-mouse_relative_pos*camera.get_zoom())
-	
-func on_wheel( button_index ):
-	if( button_index == BUTTON_WHEEL_UP ):
-		zoom_in()
-	else:
-		zoom_out()
+
 
 func on_mouse_motion( mouse_pos ):
 	var mouse_real_pos = mouse_pos_to_real_pos( mouse_pos )

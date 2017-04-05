@@ -10,6 +10,7 @@ onready var select_button = get_node("canvas_layer/ui/editor_command_panel_conta
 onready var erase_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/erase_button")
 onready var undo_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/undo_button")
 onready var redo_button = get_node("canvas_layer/ui/editor_command_panel_container/h_box_container/redo_button")
+
 onready var layer_manager = get_node("canvas_layer/ui/layer_manager")
 
 onready var save_file_dialog = get_node("canvas_layer/ui/editor_command_panel_container/save_file_dialog")
@@ -55,7 +56,7 @@ func _unhandled_input(ev):
 		wheel_pressed = ev.pressed
 	# mouse motion while holding middle click down
 	if( ev.type == InputEvent.MOUSE_MOTION && wheel_pressed ):
-		grid.on_middle_click_motion( ev.relative_pos )
+		camera.on_middle_click_motion( ev.relative_pos )
 		
 
 	
@@ -63,7 +64,7 @@ func _unhandled_input(ev):
 	if( ev.type == InputEvent.MOUSE_BUTTON && 
 	( ev.button_index == BUTTON_WHEEL_UP || ev.button_index == BUTTON_WHEEL_DOWN ) &&
 	ev.pressed ):
-		grid.on_wheel( ev.button_index )
+		camera.on_wheel( ev.button_index )
 
 	# mouse motion
 	if( ev.type == InputEvent.MOUSE_MOTION ):
@@ -139,11 +140,11 @@ func _on_load_file_dialog_file_selected( path ):
 
 
 func _on_zoom_in_button_pressed():
-	grid.zoom_in()
+	camera.zoom_in()
 func _on_zoom_out_button_pressed():
-	grid.zoom_out()
+	camera.zoom_out()
 func _on_reset_zoom_button_pressed():
-	grid.zoom_reset()
+	camera.zoom_reset()
 
 
 
