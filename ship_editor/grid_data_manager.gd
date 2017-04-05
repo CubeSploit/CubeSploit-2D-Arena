@@ -54,7 +54,7 @@ func remove_wire( layer_id, grid_pos ):
 func get_layer_id_containing_wire( grid_pos ):
 	var selected_layer = grid_data.get_selected_layer()
 	if( grid_data.has_wire(selected_layer, grid_pos) ):
-		return selected_layer
+		return grid_data.get_selected_layer_id()
 	for layer_id in range(grid_data.get_layers_count()):
 		if( grid_data.has_wire(grid_data.get_layer(layer_id), grid_pos) ):
 			return layer_id
