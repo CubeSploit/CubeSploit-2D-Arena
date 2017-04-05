@@ -45,8 +45,10 @@ func wire_click( grid_pos, wire_type ):
 	if( reset ):
 		wire_click_first = grid_pos
 		wire_click_second = null
-
+		
+	grid_data_manager.wire_click()
 	update_wire_mode_selected_tiles_cursor()
+	
 
 
 func reset_wire_mode():
@@ -113,40 +115,40 @@ func _draw():
 		var tile_grid_pos = tiles_grid_pos[i]
 		var tile = grid_data.get_tile(tile_grid_pos)
 		var pos = grid_pos_to_pos(tile_grid_pos)
-		draw_texture( Tiles.Data[tile.get_type()].tex, pos)
+		draw_texture( Tiles.Data[tile.type].tex, pos)
 		for d in global.direction_iterator:
 			if( tile.connections[d] ):
 				draw_texture( Tiles.connection_textures[d], pos )
 	
-	var layers_id_iterator = range(grid_data.get_layers().size())
+	var layers_id_iterator = range(grid_data.get_layers_count())
 	for layer_id in layers_id_iterator:
 		if( layer_id != grid_data.get_selected_layer_id() ):
 			var layer = grid_data.get_layer(layer_id)
-			if( layer.is_visible() ):
-				var wires_grid_pos = layer.get_wires().keys()
+			if( layer.visible ):
+				var wires_grid_pos = grid_data.get_wires(layer).keys()
 				var wires_grid_pos_iterator = range(wires_grid_pos.size())
 				for wire_grid_pos_id in wires_grid_pos_iterator:
 					var wire_grid_pos = wires_grid_pos[wire_grid_pos_id]
-					var wire = layer.get_wire(wire_grid_pos)
+					var wire = grid_data.get_wire(layer, wire_grid_pos)
 					var wire_pos = grid_pos_to_pos(wire_grid_pos)
-					if( wire.get_type() == TilesMisc.Type.LogicWire ):
-						draw_logic_wire( wire.get_pin(), wire_pos, wire.get_pout(), layer.get_color())
-					elif( wire.get_type() == TilesMisc.Type.EnergyWire ):
-						draw_energy_wire( wire.get_pin(), wire_pos, wire.get_pout(), layer.get_color() )
+					if( wire.type == TilesMisc.Type.LogicWire ):
+						draw_logic_wire( wire.pin, wire_pos, wire.pout, layer.color)
+					elif( wire.type == TilesMisc.Type.EnergyWire ):
+						draw_energy_wire( wire.pin, wire_pos, wire.pout, layer.color )
 	
 	var layer = grid_data.get_selected_layer()
-	if( layer.is_visible() ):
-		var wires_grid_pos = layer.get_wires().keys()
+	if( layer.visible ):
+		var wires_grid_pos = grid_data.get_wires(layer).keys()
 		var wires_grid_pos_iterator = range(wires_grid_pos.size())
 		for wire_grid_pos_id in wires_grid_pos_iterator:
 			var wire_grid_pos = wires_grid_pos[wire_grid_pos_id]
-			var wire = layer.get_wire(wire_grid_pos)
+			var wire = grid_data.get_wire(layer, wire_grid_pos)
 			var wire_pos = grid_pos_to_pos(wire_grid_pos)
 
-			if( wire.get_type() == TilesMisc.Type.LogicWire ):
-				draw_logic_wire( wire.get_pin(), wire_pos, wire.get_pout(), layer.get_color())
-			elif( wire.get_type() == TilesMisc.Type.EnergyWire ):
-				draw_energy_wire( wire.get_pin(), wire_pos, wire.get_pout(), layer.get_color())
+			if( wire.type == TilesMisc.Type.LogicWire ):
+				draw_logic_wire( wire.pin, wire_pos, wire.pout, layer.color )
+			elif( wire.type == TilesMisc.Type.EnergyWire ):
+				draw_energy_wire( wire.pin, wire_pos, wire.pout, layer.color )
 
 
 func draw_logic_wire( pin, pcenter, pout, color):
@@ -176,9 +178,9 @@ func on_left_click( mouse_pos ):
 	elif( ship_editor.mouse_mode == ship_editor.MouseMode.ERASER ):
 		var layer_id = grid_data_manager.get_layer_id_containing_wire( mouse_grid_pos )
 		if( layer_id != -1 ):
-			grid_data_manager.erase_wire(layer_id, mouse_grid_pos)
+			grid_data_manager.remove_wire(layer_id, mouse_grid_pos)
 		else:
-			grid_data_manager.erase_tile( mouse_grid_pos )
+			grid_data_manager.remove_tile( mouse_grid_pos )
 	elif( ship_editor.mouse_mode == ship_editor.MouseMode.WIRE ):
 		wire_click( mouse_grid_pos, ship_editor.selected_tile_type )
 		

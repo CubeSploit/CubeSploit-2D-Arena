@@ -17,13 +17,13 @@ signal layer_sight_enabled(layer_id)
 func _ready():
 	var layer = add_layer("Default", null)
 	layer.select()
-	emit_signal("layer_added", 0, layer.name, layer.color)
+	emit_signal("default_layer_added", 0, layer.name, layer.color)
 
 func load_layers( layers ):
 	while( self.layers.size() != 0 ):
 		delete_layer(0)
 	for i in range(layers.size()):
-		add_layer(layers[i].get_name(), layers[i].get_color())
+		add_layer(layers[i].name, layers[i].color)
 
 func add_layer(name = null, color = null):
 	var layer = layer_button_scene.instance()
@@ -74,8 +74,9 @@ func on_layer_enable_sight(layer):
 
 func _on_new_layer_button_pressed():
 	var layer = add_layer()
+	# order of the next two line is important
+	emit_signal("layer_added", 0, layer.name, layer.color) 
 	layer.select()
-	emit_signal("layer_added", 0, layer.name, layer.color)
 
 func _on_delete_layer_button_pressed():
 	if( layers.size() != 1 ):
