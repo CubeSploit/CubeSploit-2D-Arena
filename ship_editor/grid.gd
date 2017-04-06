@@ -124,17 +124,64 @@ func draw_logic_wire( pin, pcenter, pout, color):
 	pcenter = pcenter + TilesMisc.size/2
 	pin = pcenter + (grid_pos_to_pos(pin)+ TilesMisc.size/2 - pcenter) /2
 	pout = pcenter + (grid_pos_to_pos(pout)+ TilesMisc.size/2 - pcenter) /2
-	draw_line(pin, pcenter, color,2)
-	draw_line(pcenter, pout, color,2)
+#	draw_line(pin, pcenter, color,2)
+#	draw_line(pcenter, pout, color,2)
+	var extents = pcenter-pin
+	var offset = Vector2(0,0)
+	offset.x = 0 if extents.x != 0 else 1
+	offset.y = 0 if extents.y != 0 else 1
+	extents.x = extents.x if extents.x != 0 else 2
+	extents.y = extents.y if extents.y != 0 else 2
+	draw_rect( Rect2(pin-offset, extents), color)
+	
+	extents = pcenter-pout
+	offset = Vector2(0,0)
+	offset.x = 0 if extents.x != 0 else 1
+	offset.y = 0 if extents.y != 0 else 1
+	extents.x = extents.x if extents.x != 0 else 2
+	extents.y = extents.y if extents.y != 0 else 2
+	draw_rect( Rect2(pout-offset, extents), color)
 	
 func draw_energy_wire( pin, pcenter, pout, color):
 	pcenter = pcenter + TilesMisc.size/2
 	pin = pcenter + (grid_pos_to_pos(pin)+ TilesMisc.size/2 - pcenter) /2
 	pout = pcenter + (grid_pos_to_pos(pout)+ TilesMisc.size/2 - pcenter) /2
-	draw_line(pin, pcenter, color,5)
-	draw_line(pin, pcenter, Color(255,255,255),1)
-	draw_line(pcenter, pout, color,5)
-	draw_line(pcenter, pout, Color(255,255,255),1)
+#	draw_line(pin, pcenter, color,5)
+	var extents = pcenter-pin
+	var offset = Vector2(0,0)
+	offset.x = 0 if extents.x != 0 else 3
+	offset.y = 0 if extents.y != 0 else 3
+	extents.x = extents.x if extents.x != 0 else 6
+	extents.y = extents.y if extents.y != 0 else 6
+	draw_rect( Rect2(pin-offset, extents), color)
+	
+#	draw_line(pin, pcenter, Color(255,255,255),1)
+	extents = pcenter-pin
+	offset = Vector2(0,0)
+	offset.x = 0 if extents.x != 0 else 1
+	offset.y = 0 if extents.y != 0 else 1
+	extents.x = extents.x if extents.x != 0 else 2
+	extents.y = extents.y if extents.y != 0 else 2
+	draw_rect( Rect2(pin-offset, extents), Color(255,255,255))
+	
+	
+#	draw_line(pcenter, pout, color,5)
+	var extents = pcenter-pout
+	var offset = Vector2(0,0)
+	offset.x = 0 if extents.x != 0 else 3
+	offset.y = 0 if extents.y != 0 else 3
+	extents.x = extents.x if extents.x != 0 else 6
+	extents.y = extents.y if extents.y != 0 else 6
+	draw_rect( Rect2(pout-offset, extents), color)
+	
+#	draw_line(pcenter, pout, Color(255,255,255),1)
+	extents = pcenter-pout
+	offset = Vector2(0,0)
+	offset.x = 0 if extents.x != 0 else 1
+	offset.y = 0 if extents.y != 0 else 1
+	extents.x = extents.x if extents.x != 0 else 2
+	extents.y = extents.y if extents.y != 0 else 2
+	draw_rect( Rect2(pout-offset, extents), Color(255,255,255))
 
 
 
