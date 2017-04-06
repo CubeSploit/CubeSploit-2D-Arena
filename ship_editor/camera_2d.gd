@@ -25,7 +25,7 @@ func zoom(zoom_where):
 	if( zoom_where == "reset" ):
 		new_size = OS.get_window_size()
 		new_zoom = Vector2(1,1)
-		self.set_pos(Vector2(0,0))
+		self.set_pos(new_size/2)
 	else:
 		var tiles_screen_dim = OS.get_window_size()/Tiles.size/10
 		var added_size = Tiles.size * tiles_screen_dim
