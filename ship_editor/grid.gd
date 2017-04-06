@@ -206,8 +206,8 @@ func on_left_click( mouse_pos ):
 	left_click_last_mouse_pos = mouse_pos
 func on_left_click_motion( mouse_pos ):
 	left_click_drag_mode = true
-	var last_mouse_grid_pos = pos_to_grid_pos( left_click_last_mouse_pos )
-	var new_mouse_grid_pos = pos_to_grid_pos( mouse_pos )
+	var last_mouse_grid_pos = pos_to_grid_pos( mouse_pos_to_real_pos(left_click_last_mouse_pos) )
+	var new_mouse_grid_pos = pos_to_grid_pos( mouse_pos_to_real_pos(mouse_pos) )
 
 	if( last_mouse_grid_pos != new_mouse_grid_pos ):
 		on_left_click( mouse_pos )
