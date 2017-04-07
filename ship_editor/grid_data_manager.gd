@@ -8,6 +8,7 @@ var grid_data = GridData.new()
 
 var grid_data_changed = false
 signal grid_data_changed()
+signal tile_changed(tile_to_update)
 
 func set_grid_data(grid_data):
 	self.grid_data = grid_data
@@ -20,14 +21,14 @@ func set_tile( grid_pos, tile_type ):
 		doo()
 	var tile = GridData.create_tile(tile_type)
 	grid_data.set_tile(grid_pos, tile)
-	emit_signal("grid_data_changed")
+	emit_signal("tile_changed", grid_pos)
 func remove_tile( grid_pos ):
 	if( !grid.left_click_drag_mode ):
 		doo()
 	if( !grid_data.has_tile(grid_pos) ):
 		return 
 	grid_data.remove_tile(grid_pos)
-	emit_signal("grid_data_changed")
+	emit_signal("tile_changed", grid_pos)
 
 var history_next_wire = false
 func wire_click( ):
