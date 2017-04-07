@@ -6,8 +6,12 @@ onready var layer_manager = get_node("../canvas_layer/ui/layer_manager")
 var GridData = preload("res://ship_editor/grid_data.gd")
 var grid_data = GridData.new()
 
+var grid_data_changed = false
+signal grid_data_changed()
+
 func set_grid_data(grid_data):
 	self.grid_data = grid_data
+	emit_signal("grid_data_changed")
 func get_grid_data():
 	return grid_data
 
@@ -16,14 +20,14 @@ func set_tile( grid_pos, tile_type ):
 		doo()
 	var tile = GridData.create_tile(tile_type)
 	grid_data.set_tile(grid_pos, tile)
-	grid.update()
+	emit_signal("grid_data_changed")
 func remove_tile( grid_pos ):
 	if( !grid.left_click_drag_mode ):
 		doo()
 	if( !grid_data.has_tile(grid_pos) ):
 		return 
 	grid_data.remove_tile(grid_pos)
-	grid.update()
+	emit_signal("grid_data_changed")
 
 var history_next_wire = false
 func wire_click( ):
@@ -37,7 +41,7 @@ func set_wire( p1, p2, p3, wire_type):
 		var layer = grid_data.get_selected_layer()
 		var wire = GridData.create_wire(wire_type, p1, p3)
 		grid_data.set_wire(layer, p2, wire)
-		grid.update()
+		emit_signal("grid_data_changed")
 		return true
 	else:
 		return false
@@ -49,7 +53,7 @@ func remove_wire( layer_id, grid_pos ):
 		return
 	var layer = grid_data.get_layer(layer_id)
 	grid_data.remove_wire(layer, grid_pos)
-	grid.update()
+	emit_signal("grid_data_changed")
 
 func get_layer_id_containing_wire( grid_pos ):
 	var selected_layer = grid_data.get_selected_layer()
@@ -81,7 +85,7 @@ func undo():
 	if( undo_history.empty() ):
 		emit_signal("undo_history_empty")
 	emit_signal("redo_history_not_empty")
-	grid.update()
+	emit_signal("grid_data_changed")
 func redo():
 	undo_history.push_front(var2bytes(inst2dict(grid_data)))
 	grid_data= dict2inst(bytes2var( redo_history.pop_front() ))
@@ -89,7 +93,7 @@ func redo():
 	if( redo_history.empty() ):
 		emit_signal("redo_history_empty")
 	emit_signal("undo_history_not_empty")
-	grid.update()
+	emit_signal("grid_data_changed")
 
 
 func save_grid_data( path ):
@@ -105,7 +109,7 @@ func load_grid_data( path ):
 	file.close()
 	grid_data =  dict2inst(bytes2var(content))
 	layer_manager.load_layers(grid_data.get_layers())
-	grid.update()
+	emit_signal("grid_data_changed")
 
 
 
@@ -118,26 +122,26 @@ func _on_layer_manager_layer_added( layer_id, layer_name, layer_color ):
 func _on_layer_manager_layer_color_changed( layer_id, layer_color ):
 	doo()
 	grid_data.get_layer(layer_id).color = layer_color
-	grid.update()
+	emit_signal("grid_data_changed")
 func _on_layer_manager_layer_deleted( layer_id ):
 	if( grid_data.get_layers_count() > layer_id ):
 		doo()
 		grid_data.remove_layer(layer_id)
 		if( layer_id == grid_data.get_selected_layer_id() ):
 			grid_data.set_selected_layer_id(0)
-		grid.update()
+		emit_signal("grid_data_changed")
 func _on_layer_manager_layer_name_changed( layer_id, layer_name ):
 	doo()
 	grid_data.get_layer(layer_id).name = layer_name
 func _on_layer_manager_layer_selected( layer_id ):
 	grid_data.set_selected_layer_id( layer_id )
-	grid.update()
+	emit_signal("grid_data_changed")
 func _on_layer_manager_layer_sight_disabled( layer_id ):
 	doo()
 	grid_data.get_layer(layer_id).visible = false
-	grid.update()
+	emit_signal("grid_data_changed")
 func _on_layer_manager_layer_sight_enabled( layer_id ):
 	doo()
 	grid_data.get_layer(layer_id).visible = true
-	grid.update()
+	emit_signal("grid_data_changed")
 

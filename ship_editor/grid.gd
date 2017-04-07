@@ -13,15 +13,21 @@ onready var selected_tile_wire_2 = get_node("selected_tile_wire_2")
 var grid_texture_virtual_size = OS.get_window_size()
 
 var left_click_last_mouse_pos
+var left_click_last_mouse_grid_pos
 var left_click_drag_mode = false
 var wheel_pressed = false
 
-
+var need_update = false
 
 
 
 func _ready():
 	set_process_unhandled_input(true)
+	set_process(true)
+
+func _process(delta):
+	if( need_update ):
+		update()
 
 
 
@@ -204,15 +210,28 @@ func on_left_click( mouse_pos ):
 		reset_wire_mode()
 		
 	left_click_last_mouse_pos = mouse_pos
+	left_click_last_mouse_grid_pos = mouse_grid_pos
 func on_left_click_motion( mouse_pos ):
 	left_click_drag_mode = true
-	var last_mouse_grid_pos = pos_to_grid_pos( mouse_pos_to_real_pos(left_click_last_mouse_pos) )
 	var new_mouse_grid_pos = pos_to_grid_pos( mouse_pos_to_real_pos(mouse_pos) )
 
-	if( last_mouse_grid_pos != new_mouse_grid_pos ):
+	var delta =  new_mouse_grid_pos-left_click_last_mouse_grid_pos
+	var distance = abs(delta.x) + abs(delta.y)
+	
+	if( distance > 1 ):
+		var divided_mouse_pos = (mouse_pos - left_click_last_mouse_pos)/distance
+		for i in range(distance):
+			on_left_click_motion(left_click_last_mouse_pos + divided_mouse_pos )
+	elif (distance == 1 ):
+#	if( left_click_last_mouse_grid_pos != new_mouse_grid_pos ):
 		on_left_click( mouse_pos )
 		
-	left_click_last_mouse_pos = mouse_pos
+		left_click_last_mouse_pos = mouse_pos
+		left_click_last_mouse_grid_pos = new_mouse_grid_pos
+	else:
+		left_click_last_mouse_pos = mouse_pos
+		left_click_last_mouse_grid_pos = new_mouse_grid_pos
+		
 func on_left_click_release( ):
 	left_click_drag_mode = false
 
@@ -233,3 +252,7 @@ func pos_to_grid_pos( pos ):
 func grid_pos_to_pos( grid_pos ):
 	return grid_pos*Tiles.size
 
+
+
+func _on_grid_data_manager_grid_data_changed():
+	need_update = true
