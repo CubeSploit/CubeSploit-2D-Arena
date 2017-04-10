@@ -552,6 +552,8 @@ margin/right = 300.0
 
 [connection signal="undo_history_not_empty" from="grid_data_manager" to="." method="_on_grid_data_manager_undo_history_not_empty"]
 
+[connection signal="wire_changed" from="grid_data_manager" to="grid_renderer" method="_on_grid_data_manager_wire_changed"]
+
 [connection signal="item_selected" from="canvas_layer/ui/tab_container/Tiles" to="." method="_on_Tiles_item_selected"]
 
 [connection signal="item_selected" from="canvas_layer/ui/tab_container/Misc" to="." method="_on_Misc_item_selected"]

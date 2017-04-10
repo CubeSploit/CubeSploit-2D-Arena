@@ -39,9 +39,6 @@ func wire_click( grid_pos, wire_type ):
 	if( reset ):
 		wire_click_first = grid_pos
 		wire_click_second = null
-		
-	grid_data_manager.wire_click()
-	update_wire_mode_selected_tiles_cursor()
 
 func get_layer_id_containing_wire( grid_pos ):
 	var grid_data = grid_data_manager.get_grid_data()

@@ -3,12 +3,15 @@ extends Node
 onready var grid_input_manager = get_node("../grid_input_manager")
 onready var layer_manager = get_node("../canvas_layer/ui/layer_manager")
 
+var Action = preload("res://ship_editor/action.gd")
+
 var GridData = preload("res://ship_editor/grid_data.gd")
 var grid_data = GridData.new()
 
 var grid_data_changed = false
 signal grid_data_changed()
 signal tile_changed(tile_to_update)
+signal wire_changed(wire_to_update)
 
 func set_grid_data(grid_data):
 	self.grid_data = grid_data
@@ -17,44 +20,47 @@ func get_grid_data():
 	return grid_data
 
 func set_tile( grid_pos, tile_type ):
-	if( !grid_input_manager.left_click_drag_mode ):
-		doo()
+	start_action(["tiles",grid_pos])
+	
 	var tile = GridData.create_tile(tile_type)
 	grid_data.set_tile(grid_pos, tile)
+	
+	stop_action()
 	emit_signal("tile_changed", grid_pos)
 func remove_tile( grid_pos ):
-	if( !grid_input_manager.left_click_drag_mode ):
-		doo()
+	start_action(["tiles",grid_pos])
+	
 	if( !grid_data.has_tile(grid_pos) ):
 		return 
 	grid_data.remove_tile(grid_pos)
+	
+	stop_action()
 	emit_signal("tile_changed", grid_pos)
 
-var history_next_wire = false
-func wire_click( ):
-	if( !grid_input_manager.left_click_drag_mode ):
-		history_next_wire = true
 func set_wire( p1, p2, p3, wire_type):
 	if( grid_data.has_tile(p2) ):
-		if( !grid_input_manager.left_click_drag_mode || history_next_wire):
-			doo()
-			history_next_wire = false
+		start_action(["layers", grid_data.selected_layer_id, "wires", p2])
+		
 		var layer = grid_data.get_selected_layer()
 		var wire = GridData.create_wire(wire_type, p1, p3)
 		grid_data.set_wire(layer, p2, wire)
-		emit_signal("grid_data_changed")
+		
+		stop_action()
+		emit_signal("wire_changed", p2)
 		return true
 	else:
 		return false
 	
 func remove_wire( layer_id, grid_pos ):
-	if( !grid_input_manager.left_click_drag_mode ):
-		doo()
+	start_action(["layers", layer_id, "wires", grid_pos])
+		
 	if( !grid_data.has_wire( grid_data.get_layer(layer_id), grid_pos ) ):
 		return
 	var layer = grid_data.get_layer(layer_id)
 	grid_data.remove_wire(layer, grid_pos)
-	emit_signal("grid_data_changed")
+	
+	stop_action()
+	emit_signal("wire_changed", grid_pos)
 
 func get_layer_id_containing_wire( grid_pos ):
 	var selected_layer = grid_data.get_selected_layer()
@@ -65,6 +71,7 @@ func get_layer_id_containing_wire( grid_pos ):
 			return layer_id
 	return -1
 
+var current_action
 var undo_history = []
 var redo_history = []
 signal undo_history_empty()
@@ -72,29 +79,67 @@ signal undo_history_not_empty()
 signal redo_history_empty()
 signal redo_history_not_empty()
 
-
-func doo():
-	undo_history.push_front( var2bytes(inst2dict(grid_data)) )
+func start_action(path):
+	current_action = Action.new(grid_data, path)
+	current_action.set_old_value()
+func stop_action():
+	current_action.set_new_value()
+	undo_history.push_front(current_action)
+	current_action = null
+	
 	redo_history.clear()
 	emit_signal("undo_history_not_empty")
 	emit_signal("redo_history_empty")
 func undo():
-	redo_history.push_front( var2bytes(inst2dict(grid_data)) )
-	grid_data = dict2inst(bytes2var( undo_history.pop_front()))
-
+	var current_action = undo_history.pop_front()
+	current_action.undo()
+	redo_history.push_front( current_action )
+	current_action = null
+	
 	layer_manager.load_layers(grid_data.get_layers())
+	
 	if( undo_history.empty() ):
 		emit_signal("undo_history_empty")
 	emit_signal("redo_history_not_empty")
 	emit_signal("grid_data_changed")
 func redo():
-	undo_history.push_front(var2bytes(inst2dict(grid_data)))
-	grid_data= dict2inst(bytes2var( redo_history.pop_front() ))
+	var current_action = redo_history.pop_front()
+	current_action.redo()
+	undo_history.push_front( current_action )
+	current_action = null
+
 	layer_manager.load_layers(grid_data.get_layers())
+
 	if( redo_history.empty() ):
 		emit_signal("redo_history_empty")
 	emit_signal("undo_history_not_empty")
 	emit_signal("grid_data_changed")
+
+#func doo():
+#	undo_history.push_front( var2bytes(inst2dict(grid_data)) )
+#	redo_history.clear()
+#	emit_signal("undo_history_not_empty")
+#	emit_signal("redo_history_empty")
+#func undo():
+#	redo_history.push_front( var2bytes(inst2dict(grid_data)) )
+#	grid_data = dict2inst(bytes2var( undo_history.pop_front()))
+#
+#	layer_manager.load_layers(grid_data.get_layers())
+#	
+#	if( undo_history.empty() ):
+#		emit_signal("undo_history_empty")
+#	emit_signal("redo_history_not_empty")
+#	emit_signal("grid_data_changed")
+#func redo():
+#	undo_history.push_front(var2bytes(inst2dict(grid_data)))
+#	grid_data= dict2inst(bytes2var( redo_history.pop_front() ))
+#	
+#	layer_manager.load_layers(grid_data.get_layers())
+#	
+#	if( redo_history.empty() ):
+#		emit_signal("redo_history_empty")
+#	emit_signal("undo_history_not_empty")
+#	emit_signal("grid_data_changed")
 
 
 func save_grid_data( path ):

@@ -18,6 +18,8 @@ var grid_texture_virtual_size = OS.get_window_size()
 
 
 var need_update = false
+var need_tile_update = false
+var need_wire_update = false
 var tiles_to_update = []
 
 
@@ -29,20 +31,18 @@ func _ready():
 	connection_tilemap.set_tileset(Tiles.get_connection_tileset())
 
 func _process(delta):
-	if( !tiles_to_update.empty() ):
-		var grid_data = grid_data_manager.get_grid_data()
-		while( !tiles_to_update.empty() ):
-			var tile_grid_pos = tiles_to_update.pop_front()
-			tile_tilemap.set_cellv(tile_grid_pos, -1)
-			connection_tilemap.set_cellv(tile_grid_pos, -1)
-			if( grid_data.has_tile(tile_grid_pos) ):
-				var tile = grid_data.get_tile(tile_grid_pos)
-				tile_tilemap.set_cellv(tile_grid_pos, tile.type)
-				connection_tilemap.set_cellv(tile_grid_pos, Tiles.get_connection_id(tile.connections))
-	
 	if( need_update ):
+		update_tiles()
 		update()
 		need_update = false
+		
+	if( need_tile_update ):
+		update_tiles_from_list()
+		need_tile_update = false
+		
+	if( need_wire_update ):
+		update()
+		need_wire_update = false
 	
 	cursor.set_pos( grid_input_manager.cursor_pos )
 	
@@ -64,10 +64,18 @@ func _process(delta):
 
 
 
+func update_tiles_from_list():
+	var grid_data = grid_data_manager.get_grid_data()
+	while( !tiles_to_update.empty() ):
+		var tile_grid_pos = tiles_to_update.pop_front()
+		tile_tilemap.set_cellv(tile_grid_pos, -1)
+		connection_tilemap.set_cellv(tile_grid_pos, -1)
+		if( grid_data.has_tile(tile_grid_pos) ):
+			var tile = grid_data.get_tile(tile_grid_pos)
+			tile_tilemap.set_cellv(tile_grid_pos, tile.type)
+			connection_tilemap.set_cellv(tile_grid_pos, Tiles.get_connection_id(tile.connections))
 
-
-	
-func _draw():
+func update_tiles():
 	var grid_data = grid_data_manager.get_grid_data()
 	var tiles_grid_pos = grid_data.get_tiles().keys()
 	var tiles_pos_iterator = range(tiles_grid_pos.size())
@@ -77,13 +85,15 @@ func _draw():
 		var tile_grid_pos = tiles_grid_pos[i]
 		var tile = grid_data.get_tile(tile_grid_pos)
 		var pos = grid_pos_to_pos(tile_grid_pos)
-#		draw_texture( Tiles.Data[tile.type].tex, pos)
-#		for d in global.direction_iterator:
-#			if( tile.connections[d] ):
-#				draw_texture( Tiles.connection_textures[d], pos )
 		tile_tilemap.set_cellv( tile_grid_pos, tile.type)
 		connection_tilemap.set_cellv(tile_grid_pos, Tiles.get_connection_id(tile.connections))
 	
+
+func _draw():
+	draw_wires()
+	
+func draw_wires():
+	var grid_data = grid_data_manager.get_grid_data()
 	var layers_id_iterator = range(grid_data.get_layers_count())
 	for layer_id in layers_id_iterator:
 		if( layer_id != grid_data.get_selected_layer_id() ):
@@ -192,4 +202,7 @@ func grid_pos_to_pos( grid_pos ):
 func _on_grid_data_manager_grid_data_changed():
 	need_update = true
 func _on_grid_data_manager_tile_changed( tile_to_update ):
+	need_tile_update = true
 	tiles_to_update.append(tile_to_update)
+func _on_grid_data_manager_wire_changed( wire_to_update ):
+	need_wire_update = true
