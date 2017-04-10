@@ -1,7 +1,7 @@
 extends Node2D
 
 onready var camera = get_node('camera_2d')
-onready var grid = get_node('grid')
+onready var grid_input_manager = get_node('grid_input_manager')
 onready var grid_data_manager = get_node("grid_data_manager")
 
 onready var tile_list = get_node("canvas_layer/ui/tab_container/Tiles")
@@ -40,16 +40,16 @@ func _ready():
 func _unhandled_input(ev):
 	# left click press
 	if( ev.type == InputEvent.MOUSE_BUTTON && ev.button_index == BUTTON_LEFT && ev.pressed):
-		grid.on_left_click(ev.pos)
+		grid_input_manager.on_left_click(ev.pos)
 	
 	# left click press/release
 	if( ev.type == InputEvent.MOUSE_BUTTON && ev.button_index == BUTTON_LEFT ):
 		left_click_pressed = ev.pressed
 		if( !ev.pressed ):
-			grid.on_left_click_release()
+			grid_input_manager.on_left_click_release()
 	# mouse motion while holding left click down
 	if( ev.type == InputEvent.MOUSE_MOTION && left_click_pressed ):
-		grid.on_left_click_motion( ev.pos )
+		grid_input_manager.on_left_click_motion( ev.pos )
 		
 	# middle click press/release
 	if( ev.type == InputEvent.MOUSE_BUTTON && ev.button_index == BUTTON_MIDDLE ):
@@ -68,7 +68,7 @@ func _unhandled_input(ev):
 
 	# mouse motion
 	if( ev.type == InputEvent.MOUSE_MOTION ):
-		grid.on_mouse_motion( ev.pos )
+		grid_input_manager.on_mouse_motion( ev.pos )
 
 
 func _on_Tiles_button_clicked( button_index ):

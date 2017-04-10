@@ -1,6 +1,6 @@
 extends Node
 
-onready var grid = get_node("../grid")
+onready var grid_input_manager = get_node("../grid_input_manager")
 onready var layer_manager = get_node("../canvas_layer/ui/layer_manager")
 
 var GridData = preload("res://ship_editor/grid_data.gd")
@@ -17,13 +17,13 @@ func get_grid_data():
 	return grid_data
 
 func set_tile( grid_pos, tile_type ):
-	if( !grid.left_click_drag_mode ):
+	if( !grid_input_manager.left_click_drag_mode ):
 		doo()
 	var tile = GridData.create_tile(tile_type)
 	grid_data.set_tile(grid_pos, tile)
 	emit_signal("tile_changed", grid_pos)
 func remove_tile( grid_pos ):
-	if( !grid.left_click_drag_mode ):
+	if( !grid_input_manager.left_click_drag_mode ):
 		doo()
 	if( !grid_data.has_tile(grid_pos) ):
 		return 
@@ -32,11 +32,11 @@ func remove_tile( grid_pos ):
 
 var history_next_wire = false
 func wire_click( ):
-	if( !grid.left_click_drag_mode ):
+	if( !grid_input_manager.left_click_drag_mode ):
 		history_next_wire = true
 func set_wire( p1, p2, p3, wire_type):
 	if( grid_data.has_tile(p2) ):
-		if( !grid.left_click_drag_mode || history_next_wire):
+		if( !grid_input_manager.left_click_drag_mode || history_next_wire):
 			doo()
 			history_next_wire = false
 		var layer = grid_data.get_selected_layer()
@@ -48,7 +48,7 @@ func set_wire( p1, p2, p3, wire_type):
 		return false
 	
 func remove_wire( layer_id, grid_pos ):
-	if( !grid.left_click_drag_mode ):
+	if( !grid_input_manager.left_click_drag_mode ):
 		doo()
 	if( !grid_data.has_wire( grid_data.get_layer(layer_id), grid_pos ) ):
 		return

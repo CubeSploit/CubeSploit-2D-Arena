@@ -1,6 +1,6 @@
 extends Camera2D
 
-onready var grid = get_node("../grid")
+onready var grid_renderer = get_node("../grid_renderer")
 
 func on_middle_click_motion( mouse_relative_pos ):
 	set_pos(get_pos()-mouse_relative_pos*get_zoom())
@@ -31,16 +31,16 @@ func zoom(zoom_where):
 		var added_size = Tiles.size * tiles_screen_dim
 		if( zoom_where == "in" ):
 			added_size *= -1
-		new_size = grid.grid_texture_virtual_size+added_size
+		new_size = grid_renderer.grid_texture_virtual_size+added_size
 		new_zoom = new_size/OS.get_window_size()
 
 	if( new_zoom.x < 0.3 || new_zoom.y < 0.3):
 		return
 	
 	self.set_zoom( new_zoom )
-	grid.grid_layer.set_motion_scale(new_zoom)
+	grid_renderer.grid_layer.set_motion_scale(new_zoom)
 	# texture size should be changed only on zoom superior to 1, else it is buggy
 	# dunno why...
 	if( new_zoom.x >= 1 || new_zoom.y >= 1 ):
-		grid.grid_texture.set_size(new_size)
-	grid.grid_texture_virtual_size = new_size
+		grid_renderer.grid_texture.set_size(new_size)
+	grid_renderer.grid_texture_virtual_size = new_size
