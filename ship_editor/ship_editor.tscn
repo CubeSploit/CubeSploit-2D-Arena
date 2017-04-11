@@ -542,6 +542,8 @@ margin/right = 300.0
 
 [connection signal="grid_data_changed" from="grid_data_manager" to="grid_renderer" method="_on_grid_data_manager_grid_data_changed"]
 
+[connection signal="layer_changed" from="grid_data_manager" to="grid_renderer" method="_on_grid_data_manager_layer_changed"]
+
 [connection signal="redo_history_empty" from="grid_data_manager" to="." method="_on_grid_data_manager_redo_history_empty"]
 
 [connection signal="redo_history_not_empty" from="grid_data_manager" to="." method="_on_grid_data_manager_redo_history_not_empty"]

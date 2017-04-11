@@ -8,12 +8,13 @@ onready var grid_data_manager = get_node("../grid_data_manager")
 var left_click_last_mouse_pos
 var left_click_last_mouse_grid_pos
 var left_click_drag_mode = false
+var wire_drag_mode = false
 var wheel_pressed = false
 
 var wire_click_first = null
 var wire_click_second = null
 
-var cursor_pos
+var cursor_pos = Vector2(0,0)
 
 func _ready():
 	pass
@@ -31,11 +32,14 @@ func wire_click( grid_pos, wire_type ):
 			reset = true
 	else:
 		if( grid_pos.distance_to(wire_click_second) == 1 ):
-			grid_data_manager.set_wire( wire_click_first, wire_click_second, grid_pos, wire_type )
+			grid_data_manager.set_wire( wire_click_first, wire_click_second, grid_pos, wire_type, wire_drag_mode)
+			if( !wire_drag_mode && left_click_drag_mode ):
+				wire_drag_mode = true
 			wire_click_first = wire_click_second
 			wire_click_second = grid_pos
 		else:
 			reset = true
+			
 	if( reset ):
 		wire_click_first = grid_pos
 		wire_click_second = null
@@ -55,13 +59,13 @@ func on_left_click( mouse_pos ):
 	var mouse_real_pos = mouse_pos_to_real_pos( mouse_pos )
 	var mouse_grid_pos = pos_to_grid_pos(mouse_real_pos)
 	if( ship_editor.mouse_mode == ship_editor.MouseMode.TILE ):
-		grid_data_manager.set_tile(mouse_grid_pos, ship_editor.selected_tile_type)
+		grid_data_manager.set_tile(mouse_grid_pos, ship_editor.selected_tile_type, left_click_drag_mode)
 	elif( ship_editor.mouse_mode == ship_editor.MouseMode.ERASER ):
-		var layer_id = get_layer_id_containing_wire( mouse_grid_pos )
+		var layer_id = get_layer_id_containing_wire( mouse_grid_pos, left_click_drag_mode )
 		if( layer_id != -1 ):
-			grid_data_manager.remove_wire(layer_id, mouse_grid_pos)
+			grid_data_manager.remove_wire(layer_id, mouse_grid_pos, left_click_drag_mode)
 		else:
-			grid_data_manager.remove_tile( mouse_grid_pos )
+			grid_data_manager.remove_tile( mouse_grid_pos, left_click_drag_mode)
 	elif( ship_editor.mouse_mode == ship_editor.MouseMode.WIRE ):
 		wire_click( mouse_grid_pos, ship_editor.selected_tile_type )
 		
@@ -93,6 +97,7 @@ func on_left_click_motion( mouse_pos ):
 		left_click_last_mouse_grid_pos = new_mouse_grid_pos
 		
 func on_left_click_release( ):
+	wire_drag_mode = false
 	left_click_drag_mode = false
 
 

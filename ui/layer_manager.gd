@@ -15,28 +15,31 @@ signal layer_sight_disabled(layer_id)
 signal layer_sight_enabled(layer_id)
 
 func _ready():
-	var layer = add_layer("Default", null)
-	layer.select()
+	var layer = add_layer("Default")
+	layer.default_select()
 	emit_signal("default_layer_added", 0, layer.name, layer.color)
 
-func load_layers( layers ):
-	while( self.layers.size() != 0 ):
-		delete_layer(0)
+func load_layers( selected_layer_id, layers ):
+	delete_all_layers()
 	for i in range(layers.size()):
-		add_layer(layers[i].name, layers[i].color)
+		var layer = add_layer(layers[i].name, layers[i].color, layers[i].visible)
+		if( i == selected_layer_id ):
+			selected_layer = layer
+			layer.default_select()
 
-func add_layer(name = null, color = null):
+func add_layer(name = null, color = null, visible = null):
 	var layer = layer_button_scene.instance()
 	var id = layers.size()
 	name = name if name != null else ("layer"+str(id))
 	color = color if color != null else Color(255,255,255)
-	
+	visible = visible if visible != null else true
 	layers.append(layer)
 	
 	selected_layer = id
 	
 	layer.set_name( name )
 	layer.set_color( color )
+	layer.set_sight( visible )
 	layer.connect("selected",self,"on_layer_select", [layer])
 	layer.connect("name_changed",self,"on_layer_name_change", [layer])
 	layer.connect("color_changed",self,"on_layer_color_change", [layer])
@@ -49,6 +52,7 @@ func add_layer(name = null, color = null):
 	
 
 func on_layer_select(layer):
+	print("on layer select")
 	var layer_id = layers.find(layer)
 	for id in range(layers.size()):
 		if( id != layer_id ):
@@ -75,7 +79,7 @@ func on_layer_enable_sight(layer):
 func _on_new_layer_button_pressed():
 	var layer = add_layer()
 	# order of the next two line is important
-	emit_signal("layer_added", 0, layer.name, layer.color) 
+	emit_signal("layer_added", layers.size()-1, layer.name, layer.color) 
 	layer.select()
 
 func _on_delete_layer_button_pressed():
@@ -83,6 +87,11 @@ func _on_delete_layer_button_pressed():
 		emit_signal("layer_deleted", selected_layer)
 		delete_layer(selected_layer)
 
+func delete_all_layers():
+	var child_count = layers.size()
+	for i in range(child_count-1,-1,-1):
+		layer_container.remove_child(layers[i])
+		layers.remove(i)
 func delete_layer(layer_id):
 	layer_container.remove_child(layers[layer_id])
 	layers.remove(layer_id)

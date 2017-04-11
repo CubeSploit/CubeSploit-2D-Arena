@@ -17,24 +17,33 @@ signal enabled_sight()
 
 var name = "Default"
 var color = Color(255,255,255)
+var sight = true
 
 func _ready():
 	button.set_text(name)
 	color_picker_button.set_color(color)
 	color_picker_button.get_picker().connect("hide", self,"_on_color_picker_hide")
-
+	set_sight(sight)
 	
 
 func set_name(name):
 	self.name = name
 	if( button ):
 		button.set_text(name)
-
-	
 func set_color(color):
 	self.color = color
 	if( color_picker_button ):
 		color_picker_button.set_color(color)
+func set_sight(sight):
+	self.sight = sight
+	if( disable_sight_button == null || enable_sight_button == null ):
+		return
+	if( !sight ):
+		disable_sight_button.hide()
+		enable_sight_button.show()
+	else:
+		disable_sight_button.show()
+		enable_sight_button.hide()
 
 
 func _on_button_pressed():
@@ -55,6 +64,10 @@ func unselect():
 	line_edit.hide()
 func select():
 	_on_button_pressed()
+func default_select():
+	selected = true
+	button.set_toggle_mode(true)
+	button.set_pressed(true)
 
 
 func _on_line_edit_text_entered( text ):
@@ -76,10 +89,8 @@ func _on_line_edit_focus_exit():
 
 
 func _on_disable_sight_button_pressed():
+	set_sight(false)
 	emit_signal("disabled_sight")
-	disable_sight_button.hide()
-	enable_sight_button.show()
 func _on_enable_sight_button_pressed():
+	set_sight(true)
 	emit_signal("enabled_sight")
-	disable_sight_button.show()
-	enable_sight_button.hide()

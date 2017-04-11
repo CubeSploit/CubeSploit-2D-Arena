@@ -2,7 +2,7 @@ extends Reference
 
 var tiles = {}
 var layers = []
-var selected_layer_id
+var selected_layer_id = 0
 
 func _init():
 	pass

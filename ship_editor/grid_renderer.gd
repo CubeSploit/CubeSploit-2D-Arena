@@ -206,3 +206,5 @@ func _on_grid_data_manager_tile_changed( tile_to_update ):
 	tiles_to_update.append(tile_to_update)
 func _on_grid_data_manager_wire_changed( wire_to_update ):
 	need_wire_update = true
+func _on_grid_data_manager_layer_changed( layer_to_update ):
+	need_wire_update = true
