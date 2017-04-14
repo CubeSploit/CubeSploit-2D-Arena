@@ -89,7 +89,7 @@ func on_left_click_motion( mouse_pos ):
 	elif (distance == 1 ):
 #	if( left_click_last_mouse_grid_pos != new_mouse_grid_pos ):
 		on_left_click( mouse_pos )
-		
+
 		left_click_last_mouse_pos = mouse_pos
 		left_click_last_mouse_grid_pos = new_mouse_grid_pos
 	else:

@@ -5,6 +5,7 @@ onready var grid_data_manager = get_node("../grid_data_manager")
 onready var grid_input_manager = get_node("../grid_input_manager")
 
 onready var cursor = get_node("cursor")
+onready var cursor_selected_tile_type = get_node("cursor/cursor_selected_tile_type")
 onready var selected_tile_wire_1 = get_node("selected_tile_wire_1")
 onready var selected_tile_wire_2 = get_node("selected_tile_wire_2")
 
@@ -45,6 +46,12 @@ func _process(delta):
 		need_wire_update = false
 	
 	cursor.set_pos( grid_input_manager.cursor_pos )
+	if( ship_editor.mouse_mode == ship_editor.MouseMode.TILE ):
+		cursor_selected_tile_type.show()
+		cursor_selected_tile_type.set_texture(Tiles.Data[ship_editor.selected_tile_type].tex)
+	else:
+		cursor_selected_tile_type.hide()
+		
 	
 	if( grid_input_manager.wire_click_first != null ):
 		selected_tile_wire_1.show()
