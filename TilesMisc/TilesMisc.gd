@@ -6,9 +6,12 @@ var count = 2
 func is_wire_mode( misc_tile_type ):
 	return misc_tile_type == Type.LogicWire || misc_tile_type == Type.EnergyWire 
 
+
 const Type = {
 	'LogicWire': 0,
-	'EnergyWire': 1
+	'EnergyWire': 1,
+	'SetAsBackground': 2,
+	'SetAsForeground': 3
 }
 
 const Data = [
@@ -19,5 +22,13 @@ const Data = [
 	{
 		"name": "Energy Wire",
 		"tex": preload("res://TilesMisc/energy_wire.png")
+	},
+	{
+		"name": "Set As Background",
+		"tex": preload("res://Tiles/background.png")
+	},
+	{
+		"name": "Set As Foreground",
+		"tex": preload("res://Tiles/hull.png")
 	}
 ]

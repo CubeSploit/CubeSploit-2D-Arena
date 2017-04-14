@@ -43,6 +43,9 @@ func has_tile(grid_pos):
 func remove_tile(grid_pos):
 	tiles.erase(grid_pos)
 
+func set_tile_as_background(grid_pos, background):
+	tiles[grid_pos].background = background
+
 
 func set_layers(layers):
 	self.layers = layers

@@ -37,6 +37,24 @@ func remove_tile( grid_pos, continuous ):
 	stop_action(continuous)
 	emit_signal("tile_changed", grid_pos)
 
+func set_tile_as_background(grid_pos, continuous):
+	start_action(["tiles",grid_pos], continuous)
+	
+	if( grid_data.has_tile(grid_pos) ):
+		grid_data.set_tile_as_background(grid_pos, true)
+	
+	stop_action(continuous)
+	emit_signal("tile_changed", grid_pos)
+func set_tile_as_foreground(grid_pos, continuous):
+	start_action(["tiles",grid_pos], continuous)
+	
+	if( grid_data.has_tile(grid_pos) ):
+		grid_data.set_tile_as_background(grid_pos, false)
+	
+	stop_action(continuous)
+	emit_signal("tile_changed", grid_pos)
+	
+
 func set_wire( p1, p2, p3, wire_type, continuous):
 	if( grid_data.has_tile(p2) ):
 		start_action(["layers", grid_data.selected_layer_id, "wires", p2], continuous)

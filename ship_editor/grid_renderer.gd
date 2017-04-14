@@ -11,6 +11,7 @@ onready var selected_tile_wire_2 = get_node("selected_tile_wire_2")
 
 onready var tile_tilemap = get_node("tile_tilemap")
 onready var connection_tilemap = get_node("connection_tilemap")
+onready var background_tilemap = get_node("background_tilemap")
 
 onready var grid_layer = get_node("parallax_bg/parallax_layer")
 onready var grid_texture = get_node("parallax_bg/parallax_layer/texture_frame")
@@ -30,6 +31,7 @@ func _ready():
 	set_process(true)
 	tile_tilemap.set_tileset(Tiles.get_tile_tileset())
 	connection_tilemap.set_tileset(Tiles.get_connection_tileset())
+	background_tilemap.set_tileset(Tiles.get_background_tileset())
 
 func _process(delta):
 	if( need_update ):
@@ -78,6 +80,7 @@ func update_tiles_from_list():
 		var tile_grid_pos = tiles_to_update.pop_front()
 		tile_tilemap.set_cellv(tile_grid_pos, -1)
 		connection_tilemap.set_cellv(tile_grid_pos, -1)
+		background_tilemap.set_cellv(tile_grid_pos, -1)
 		if( grid_data.has_tile(tile_grid_pos) ):
 			var tile = grid_data.get_tile(tile_grid_pos)
 			var tilemap_cell_options = Directions.TilemapCellOptions[ tile.direction ]
@@ -90,13 +93,17 @@ func update_tiles_from_list():
 			)
 			
 			connection_tilemap.set_cellv(tile_grid_pos, Tiles.get_connection_id(tile.connections))
-
+			
+			if( tile.background ):
+				background_tilemap.set_cellv(tile_grid_pos, 0)
+			
 func update_tiles():
 	var grid_data = grid_data_manager.get_grid_data()
 	var tiles_grid_pos = grid_data.get_tiles().keys()
 	var tiles_pos_iterator = range(tiles_grid_pos.size())
 	tile_tilemap.clear()
 	connection_tilemap.clear()
+	background_tilemap.clear()
 	for i in tiles_pos_iterator:
 		var tile_grid_pos = tiles_grid_pos[i]
 		var tile = grid_data.get_tile(tile_grid_pos)
@@ -110,7 +117,8 @@ func update_tiles():
 			tilemap_cell_options.transpose
 		)
 		connection_tilemap.set_cellv(tile_grid_pos, Tiles.get_connection_id(tile.connections))
-	
+		if( tile.background ):
+			background_tilemap.set_cellv(tile_grid_pos, 0)
 
 func _draw():
 	draw_wires()

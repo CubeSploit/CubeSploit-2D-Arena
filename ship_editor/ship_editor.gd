@@ -19,9 +19,11 @@ onready var load_file_dialog = get_node("canvas_layer/ui/editor_command_panel_co
 const MouseMode = {
 	"SELECTION": 0,
 	"TILE": 1,
-	"MISC_TILE": 2,
-	"WIRE": 3,
-	"ERASER": 4
+	"ERASER": 2,
+	"MISC_TILE": 3,
+	"WIRE": 4,
+	"SET_AS_BACKGROUND": 5,
+	"SET_AS_FOREGROUND": 6
 }
 
 
@@ -102,6 +104,10 @@ func _on_Misc_item_selected( index ):
 	mouse_mode = MouseMode.MISC_TILE
 	if( TilesMisc.is_wire_mode( index ) ):
 		mouse_mode = MouseMode.WIRE
+	elif( index == TilesMisc.Type.SetAsBackground ):
+		mouse_mode = MouseMode.SET_AS_BACKGROUND
+	elif( index == TilesMisc.Type.SetAsForeground ):
+		mouse_mode = MouseMode.SET_AS_FOREGROUND
 	tile_list.unselect_all()
 	select_button.set_pressed(false)
 	erase_button.set_pressed(false)

@@ -74,3 +74,12 @@ func get_connection_id( connections ):
 	if (connection_id == 0):
 		connection_id = -1
 	return connection_id
+
+var background_tileset = null
+func get_background_tileset():
+	if( background_tileset == null ):
+		background_tileset = TileSet.new()
+		background_tileset.create_tile(0)
+		background_tileset.tile_set_texture(0, preload("res://Tiles/background.png"))
+
+	return background_tileset

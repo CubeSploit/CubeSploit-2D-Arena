@@ -68,6 +68,10 @@ func on_left_click( mouse_pos ):
 			grid_data_manager.remove_tile( mouse_grid_pos, left_click_drag_mode)
 	elif( ship_editor.mouse_mode == ship_editor.MouseMode.WIRE ):
 		wire_click( mouse_grid_pos, ship_editor.selected_tile_type )
+	elif( ship_editor.mouse_mode == ship_editor.MouseMode.SET_AS_BACKGROUND ):
+		grid_data_manager.set_tile_as_background(mouse_grid_pos, left_click_drag_mode)
+	elif( ship_editor.mouse_mode == ship_editor.MouseMode.SET_AS_FOREGROUND ):
+		grid_data_manager.set_tile_as_foreground(mouse_grid_pos, left_click_drag_mode)
 		
 	if( ship_editor.mouse_mode != ship_editor.MouseMode.WIRE ):
 		wire_click_first = null
