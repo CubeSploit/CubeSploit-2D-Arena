@@ -61,7 +61,7 @@ func on_left_click( mouse_pos ):
 	if( ship_editor.mouse_mode == ship_editor.MouseMode.TILE ):
 		grid_data_manager.set_tile(mouse_grid_pos, ship_editor.selected_tile_type, ship_editor.tile_direction, left_click_drag_mode)
 	elif( ship_editor.mouse_mode == ship_editor.MouseMode.ERASER ):
-		var layer_id = get_layer_id_containing_wire( mouse_grid_pos, left_click_drag_mode )
+		var layer_id = get_layer_id_containing_wire( mouse_grid_pos )
 		if( layer_id != -1 ):
 			grid_data_manager.remove_wire(layer_id, mouse_grid_pos, left_click_drag_mode)
 		else:

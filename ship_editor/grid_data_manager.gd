@@ -31,9 +31,8 @@ func set_tile( grid_pos, tile_type, tile_direction, continuous ):
 func remove_tile( grid_pos, continuous ):
 	start_action(["tiles",grid_pos], continuous)
 	
-	if( !grid_data.has_tile(grid_pos) ):
-		return 
-	grid_data.remove_tile(grid_pos)
+	if( grid_data.has_tile(grid_pos) ):
+		grid_data.remove_tile(grid_pos)
 	
 	stop_action(continuous)
 	emit_signal("tile_changed", grid_pos)
