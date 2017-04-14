@@ -8,6 +8,7 @@ onready var cursor = get_node("cursor")
 onready var cursor_selected_tile_type = get_node("cursor/cursor_selected_tile_type")
 onready var selected_tile_wire_1 = get_node("selected_tile_wire_1")
 onready var selected_tile_wire_2 = get_node("selected_tile_wire_2")
+onready var selected_tile_connection = get_node("selected_tile_connection")
 
 onready var tile_tilemap = get_node("tile_tilemap")
 onready var connection_tilemap = get_node("connection_tilemap")
@@ -67,6 +68,12 @@ func _process(delta):
 		selected_tile_wire_2.set_pos( grid_input_manager.wire_click_second )
 	else:
 		selected_tile_wire_2.hide()
+	
+	if( grid_input_manager.connection_click_first != null ):
+		selected_tile_connection.show()
+		selected_tile_connection.set_pos( grid_input_manager.connection_click_first )
+	else:
+		selected_tile_connection.hide()
 
 
 

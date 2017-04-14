@@ -23,7 +23,9 @@ const MouseMode = {
 	"MISC_TILE": 3,
 	"WIRE": 4,
 	"SET_AS_BACKGROUND": 5,
-	"SET_AS_FOREGROUND": 6
+	"SET_AS_FOREGROUND": 6,
+	"CONNECT": 7,
+	"DISCONNECT": 8
 }
 
 
@@ -108,6 +110,10 @@ func _on_Misc_item_selected( index ):
 		mouse_mode = MouseMode.SET_AS_BACKGROUND
 	elif( index == TilesMisc.Type.SetAsForeground ):
 		mouse_mode = MouseMode.SET_AS_FOREGROUND
+	elif( index == TilesMisc.Type.Connect ):
+		mouse_mode = MouseMode.CONNECT
+	elif( index == TilesMisc.Type.Disconnect ):
+		mouse_mode = MouseMode.DISCONNECT
 	tile_list.unselect_all()
 	select_button.set_pressed(false)
 	erase_button.set_pressed(false)

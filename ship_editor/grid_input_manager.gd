@@ -14,6 +14,8 @@ var wheel_pressed = false
 var wire_click_first = null
 var wire_click_second = null
 
+var connection_click_first = null
+
 var cursor_pos = Vector2(0,0)
 
 func _ready():
@@ -72,10 +74,21 @@ func on_left_click( mouse_pos ):
 		grid_data_manager.set_tile_as_background(mouse_grid_pos, left_click_drag_mode)
 	elif( ship_editor.mouse_mode == ship_editor.MouseMode.SET_AS_FOREGROUND ):
 		grid_data_manager.set_tile_as_foreground(mouse_grid_pos, left_click_drag_mode)
+	elif( ship_editor.mouse_mode == ship_editor.MouseMode.CONNECT ):
+		if( connection_click_first != null && connection_click_first.distance_to(mouse_grid_pos) == 1 ):
+			grid_data_manager.connect_tiles(connection_click_first, mouse_grid_pos, left_click_drag_mode)
+		connection_click_first = mouse_grid_pos
+	elif( ship_editor.mouse_mode == ship_editor.MouseMode.DISCONNECT ):
+		if( connection_click_first != null && connection_click_first.distance_to(mouse_grid_pos) == 1 ):
+			grid_data_manager.disconnect_tiles(connection_click_first, mouse_grid_pos, left_click_drag_mode)
+		connection_click_first = mouse_grid_pos
 		
 	if( ship_editor.mouse_mode != ship_editor.MouseMode.WIRE ):
 		wire_click_first = null
 		wire_click_second = null
+		
+	if( ship_editor.mouse_mode != ship_editor.MouseMode.CONNECT && ship_editor.mouse_mode != ship_editor.MouseMode.DISCONNECT ):
+		connection_click_first = null
 		
 	left_click_last_mouse_pos = mouse_pos
 	left_click_last_mouse_grid_pos = mouse_grid_pos

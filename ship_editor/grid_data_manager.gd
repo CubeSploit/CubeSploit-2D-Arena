@@ -53,6 +53,44 @@ func set_tile_as_foreground(grid_pos, continuous):
 	
 	stop_action(continuous)
 	emit_signal("tile_changed", grid_pos)
+
+func connect_tiles(tile_grid_pos_1, tile_grid_pos_2, continuous):
+	start_action(["tiles",tile_grid_pos_1], continuous)
+	if( grid_data.has_tile(tile_grid_pos_1) ):
+		var tile = grid_data.get_tile(tile_grid_pos_1)
+		var direction_vector = tile_grid_pos_2 - tile_grid_pos_1
+		var direction = Directions.vector2_to_direction(direction_vector)
+		tile.connections[direction] = true
+	stop_action(continuous)
+	emit_signal("tile_changed", tile_grid_pos_1)
+	
+	start_action(["tiles",tile_grid_pos_2], continuous)
+	if( grid_data.has_tile(tile_grid_pos_2) ):
+		var tile = grid_data.get_tile(tile_grid_pos_2)
+		var direction_vector = tile_grid_pos_1 - tile_grid_pos_2
+		var direction = Directions.vector2_to_direction(direction_vector)
+		tile.connections[direction] = true
+	stop_action(continuous)
+	emit_signal("tile_changed", tile_grid_pos_2)
+	
+func disconnect_tiles(tile_grid_pos_1, tile_grid_pos_2, continuous):
+	start_action(["tiles",tile_grid_pos_1], continuous)
+	if( grid_data.has_tile(tile_grid_pos_1) ):
+		var tile = grid_data.get_tile(tile_grid_pos_1)
+		var direction_vector = tile_grid_pos_2 - tile_grid_pos_1
+		var direction = Directions.vector2_to_direction(direction_vector)
+		tile.connections[direction] = false
+	stop_action(continuous)
+	emit_signal("tile_changed", tile_grid_pos_1)
+	
+	start_action(["tiles",tile_grid_pos_2], continuous)
+	if( grid_data.has_tile(tile_grid_pos_2) ):
+		var tile = grid_data.get_tile(tile_grid_pos_2)
+		var direction_vector = tile_grid_pos_1 - tile_grid_pos_2
+		var direction = Directions.vector2_to_direction(direction_vector)
+		tile.connections[direction] = false
+	stop_action(continuous)
+	emit_signal("tile_changed", tile_grid_pos_2)
 	
 
 func set_wire( p1, p2, p3, wire_type, continuous):

@@ -71,6 +71,12 @@ visibility/visible = false
 texture = ExtResource( 6 )
 offset = Vector2( 10, 10 )
 
+[node name="selected_tile_connection" type="Sprite" parent="grid_renderer"]
+
+visibility/visible = false
+texture = ExtResource( 6 )
+offset = Vector2( 10, 10 )
+
 [node name="cursor" type="Sprite" parent="grid_renderer"]
 
 texture = ExtResource( 7 )

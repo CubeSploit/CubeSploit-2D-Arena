@@ -32,5 +32,17 @@ const TilemapCellOptions = [
 	}
 ]
 
+const Vec2ToDirection = {
+	Vector2(0,-1): Up,
+	Vector2(1,0): Right,
+	Vector2(0,1): Down,
+	Vector2(-1,0): Left
+}
+	
+
 static func direction_to_rad(direction):
 	return - direction * HalfPi
+
+static func vector2_to_direction(vec):
+	return Vec2ToDirection[vec]
+	

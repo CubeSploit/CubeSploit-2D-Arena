@@ -11,7 +11,9 @@ const Type = {
 	'LogicWire': 0,
 	'EnergyWire': 1,
 	'SetAsBackground': 2,
-	'SetAsForeground': 3
+	'SetAsForeground': 3,
+	'Connect': 4,
+	'Disconnect': 5
 }
 
 const Data = [
@@ -30,5 +32,13 @@ const Data = [
 	{
 		"name": "Set As Foreground",
 		"tex": preload("res://TilesMisc/set_as_foreground.png")
+	},
+	{
+		"name": "Connect",
+		"tex": preload("res://TilesMisc/connect.png")
+	},
+	{
+		"name": "Disconnect",
+		"tex": preload("res://TilesMisc/disconnect.png")
 	}
 ]
