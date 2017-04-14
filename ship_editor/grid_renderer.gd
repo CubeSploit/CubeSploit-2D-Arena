@@ -49,6 +49,7 @@ func _process(delta):
 	if( ship_editor.mouse_mode == ship_editor.MouseMode.TILE ):
 		cursor_selected_tile_type.show()
 		cursor_selected_tile_type.set_texture(Tiles.Data[ship_editor.selected_tile_type].tex)
+		cursor_selected_tile_type.set_rot( Directions.direction_to_rad( ship_editor.tile_direction ))
 	else:
 		cursor_selected_tile_type.hide()
 		
@@ -79,7 +80,15 @@ func update_tiles_from_list():
 		connection_tilemap.set_cellv(tile_grid_pos, -1)
 		if( grid_data.has_tile(tile_grid_pos) ):
 			var tile = grid_data.get_tile(tile_grid_pos)
-			tile_tilemap.set_cellv(tile_grid_pos, tile.type)
+			var tilemap_cell_options = Directions.TilemapCellOptions[ tile.direction ]
+			tile_tilemap.set_cellv(
+				tile_grid_pos, 
+				tile.type,
+				tilemap_cell_options.flip_x,
+				tilemap_cell_options.flip_y,
+				tilemap_cell_options.transpose
+			)
+			
 			connection_tilemap.set_cellv(tile_grid_pos, Tiles.get_connection_id(tile.connections))
 
 func update_tiles():
@@ -92,7 +101,14 @@ func update_tiles():
 		var tile_grid_pos = tiles_grid_pos[i]
 		var tile = grid_data.get_tile(tile_grid_pos)
 		var pos = grid_pos_to_pos(tile_grid_pos)
-		tile_tilemap.set_cellv( tile_grid_pos, tile.type)
+		var tilemap_cell_options = Directions.TilemapCellOptions[ tile.direction ]
+		tile_tilemap.set_cellv(
+			tile_grid_pos, 
+			tile.type,
+			tilemap_cell_options.flip_x,
+			tilemap_cell_options.flip_y,
+			tilemap_cell_options.transpose
+		)
 		connection_tilemap.set_cellv(tile_grid_pos, Tiles.get_connection_id(tile.connections))
 	
 

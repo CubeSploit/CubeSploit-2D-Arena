@@ -7,9 +7,10 @@ var selected_layer_id = 0
 func _init():
 	pass
 	
-static func create_tile( tile_type ):
+static func create_tile( tile_type, tile_direction ):
 	return {
 		"type": tile_type,
+		"direction": tile_direction,
 		"connections": [true,true,true,true],
 		"background": false
 	}

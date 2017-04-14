@@ -20,10 +20,10 @@ func set_grid_data(grid_data):
 func get_grid_data():
 	return grid_data
 
-func set_tile( grid_pos, tile_type, continuous ):
+func set_tile( grid_pos, tile_type, tile_direction, continuous ):
 	start_action(["tiles",grid_pos], continuous)
 	
-	var tile = GridData.create_tile(tile_type)
+	var tile = GridData.create_tile(tile_type, tile_direction)
 	grid_data.set_tile(grid_pos, tile)
 	
 	stop_action(continuous)

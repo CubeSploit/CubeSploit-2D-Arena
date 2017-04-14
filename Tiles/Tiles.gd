@@ -2,30 +2,7 @@ extends Node
 
 var size = Vector2(20,20)
 var count = 3
-#
-#var connection_textures =[
-#	preload("res://Tiles/connection/connection_top.png"),
-#	preload("res://Tiles/connection/connection_right.png"),
-#	preload("res://Tiles/connection/connection_down.png"),
-#	preload("res://Tiles/connection/connection_left.png")
-#]
-var connection_textures =[
-	preload("res://Tiles/connection/connection_1.png"),
-	preload("res://Tiles/connection/connection_2.png"),
-	preload("res://Tiles/connection/connection_3.png"),
-	preload("res://Tiles/connection/connection_4.png"),
-	preload("res://Tiles/connection/connection_5.png"),
-	preload("res://Tiles/connection/connection_6.png"),
-	preload("res://Tiles/connection/connection_7.png"),
-	preload("res://Tiles/connection/connection_8.png"),
-	preload("res://Tiles/connection/connection_9.png"),
-	preload("res://Tiles/connection/connection_10.png"),
-	preload("res://Tiles/connection/connection_11.png"),
-	preload("res://Tiles/connection/connection_12.png"),
-	preload("res://Tiles/connection/connection_13.png"),
-	preload("res://Tiles/connection/connection_14.png"),
-	preload("res://Tiles/connection/connection_15.png")
-]
+
 
 const Type = {
 	'Core': 0,
@@ -47,6 +24,25 @@ const Data = [
 		'name': 'Thruster',
 		'tex': preload("res://Tiles/thruster.png")
 	}
+]
+
+
+var connection_textures =[
+	preload("res://Tiles/connection/connection_1.png"),
+	preload("res://Tiles/connection/connection_2.png"),
+	preload("res://Tiles/connection/connection_3.png"),
+	preload("res://Tiles/connection/connection_4.png"),
+	preload("res://Tiles/connection/connection_5.png"),
+	preload("res://Tiles/connection/connection_6.png"),
+	preload("res://Tiles/connection/connection_7.png"),
+	preload("res://Tiles/connection/connection_8.png"),
+	preload("res://Tiles/connection/connection_9.png"),
+	preload("res://Tiles/connection/connection_10.png"),
+	preload("res://Tiles/connection/connection_11.png"),
+	preload("res://Tiles/connection/connection_12.png"),
+	preload("res://Tiles/connection/connection_13.png"),
+	preload("res://Tiles/connection/connection_14.png"),
+	preload("res://Tiles/connection/connection_15.png")
 ]
 
 var tile_tileset = null

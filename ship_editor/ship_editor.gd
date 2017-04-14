@@ -26,6 +26,7 @@ const MouseMode = {
 
 
 var selected_tile_type = 0
+var tile_direction = Directions.Up
 var mouse_mode = MouseMode.SELECTION
 var left_click_pressed = false
 var wheel_pressed = false
@@ -69,6 +70,16 @@ func _unhandled_input(ev):
 	# mouse motion
 	if( ev.type == InputEvent.MOUSE_MOTION ):
 		grid_input_manager.on_mouse_motion( ev.pos )
+		
+	if( Input.is_action_pressed("Up") ):
+		tile_direction = Directions.Up
+	if( Input.is_action_pressed("Right") ):
+		tile_direction = Directions.Right
+	if( Input.is_action_pressed("Down") ):
+		tile_direction = Directions.Down
+	if( Input.is_action_pressed("Left") ):
+		tile_direction = Directions.Left
+		
 
 
 func _on_Tiles_button_clicked( button_index ):

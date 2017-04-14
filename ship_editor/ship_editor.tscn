@@ -79,7 +79,7 @@ offset = Vector2( 10, 10 )
 [node name="cursor_selected_tile_type" type="Sprite" parent="grid_renderer/cursor"]
 
 visibility/visible = false
-offset = Vector2( 10, 10 )
+transform/pos = Vector2( 10, 10 )
 
 [node name="tile_tilemap" type="TileMap" parent="grid_renderer"]
 
