@@ -25,10 +25,10 @@ const Data = [
 	},
 	{
 		"name": "Set As Background",
-		"tex": preload("res://Tiles/background.png")
+		"tex": preload("res://TilesMisc/set_as_background.png")
 	},
 	{
 		"name": "Set As Foreground",
-		"tex": preload("res://Tiles/hull.png")
+		"tex": preload("res://TilesMisc/set_as_foreground.png")
 	}
 ]
