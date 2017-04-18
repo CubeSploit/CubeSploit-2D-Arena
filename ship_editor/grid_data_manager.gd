@@ -64,13 +64,13 @@ func connect_tiles(tile_grid_pos_1, tile_grid_pos_2, continuous):
 	stop_action(continuous)
 	emit_signal("tile_changed", tile_grid_pos_1)
 	
-	start_action(["tiles",tile_grid_pos_2], continuous)
+	start_action(["tiles",tile_grid_pos_2], true)
 	if( grid_data.has_tile(tile_grid_pos_2) ):
 		var tile = grid_data.get_tile(tile_grid_pos_2)
 		var direction_vector = tile_grid_pos_1 - tile_grid_pos_2
 		var direction = Directions.vector2_to_direction(direction_vector)
 		tile.connections[direction] = true
-	stop_action(continuous)
+	stop_action(true)
 	emit_signal("tile_changed", tile_grid_pos_2)
 	
 func disconnect_tiles(tile_grid_pos_1, tile_grid_pos_2, continuous):
@@ -83,13 +83,13 @@ func disconnect_tiles(tile_grid_pos_1, tile_grid_pos_2, continuous):
 	stop_action(continuous)
 	emit_signal("tile_changed", tile_grid_pos_1)
 	
-	start_action(["tiles",tile_grid_pos_2], continuous)
+	start_action(["tiles",tile_grid_pos_2], true)
 	if( grid_data.has_tile(tile_grid_pos_2) ):
 		var tile = grid_data.get_tile(tile_grid_pos_2)
 		var direction_vector = tile_grid_pos_1 - tile_grid_pos_2
 		var direction = Directions.vector2_to_direction(direction_vector)
 		tile.connections[direction] = false
-	stop_action(continuous)
+	stop_action(true)
 	emit_signal("tile_changed", tile_grid_pos_2)
 	
 
@@ -164,7 +164,7 @@ func undo():
 	emit_signal("grid_data_changed")
 func redo():
 	current_actions = redo_history.pop_front()
-	for i in range(current_actions.size()):
+	for i in range(current_actions.size()-1,-1,-1):
 		current_actions[i].redo()
 	undo_history.push_front( current_actions )
 	current_actions = []
